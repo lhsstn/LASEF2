@@ -1,0 +1,27 @@
+# Python virtual environments
+.venv/
+venv/
+env/
+.lasef/
+
+# Data folders
+data/
+datasets/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+
+# Model
+*.bin

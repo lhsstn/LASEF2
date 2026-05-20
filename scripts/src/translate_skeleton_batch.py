@@ -69,18 +69,22 @@ def create_requests(input_file: str, output_dir: str, target_langs: list, model:
                     f"Skeleton:\n{skeleton_text}"
                 )
                 
+                body_data = {
+                    "model": model,
+                    "messages": [
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": user_prompt}
+                    ]
+                }
+                # gpt-5-mini or reasoning models do not support custom temperature (only default 1 is allowed)
+                if "gpt-5" not in model.lower() and "o1" not in model.lower() and "o3" not in model.lower():
+                    body_data["temperature"] = 0.3
+                
                 req_data = {
                     "custom_id": custom_id,
                     "method": "POST",
                     "url": "/v1/chat/completions",
-                    "body": {
-                        "model": model,
-                        "messages": [
-                            {"role": "system", "content": system_prompt},
-                            {"role": "user", "content": user_prompt}
-                        ],
-                        "temperature": 0.3
-                    }
+                    "body": body_data
                 }
                 
                 f_out.write(json.dumps(req_data, ensure_ascii=False) + "\n")
@@ -249,7 +253,14 @@ def download_batches(batch_dir: str, output_dir: str):
     for lang, info in batch_meta.items():
         status = info.get("status")
         output_file_id = info.get("output_file_id")
+        error_file_id = info.get("error_file_id")
         
+        if status == "completed" and not output_file_id:
+            print(f"❌ Batch for {lang} completed but FAILED (all requests failed).")
+            if error_file_id:
+                print(f"   Error File ID: {error_file_id}. You can query its error content using check or manually.")
+            continue
+            
         if status != "completed" or not output_file_id:
             print(f"⏳ Batch for {lang} is not completed (current status: {status}). Skipping.")
             continue

@@ -3,10 +3,13 @@
 venv/
 env/
 .lasef/
+.fasttext/
 
 # Data folders
 data/
 datasets/
+dataframe/
+figure/
 
 # Python cache
 __pycache__/

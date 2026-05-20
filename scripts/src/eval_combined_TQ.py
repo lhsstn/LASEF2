@@ -571,14 +571,6 @@ def build_solver_prompt(tok, question: str, skeleton: str, lang: str,
         "zh": "好的，\n", "th": "ดี\n", "te": "సరే,\n", "en": ""
     }
     lang_name = get_lang_name(reason_lang)
-    # lang_hint = f"Instructions:\n1. Follow the Reasoning Skeleton above.\n2. Think step-by-step in {lang_name}.\nFinal Answer Format: \\\\boxed{{answer}}"
-#     lang_hint = f"""Instructions:
-# 1. Follow the Reasoning Skeleton above
-# 2. Verify all numbers against the original question
-# 3. Think step-by-step in {lang_name}
-
-# Final Answer Format: \\boxed{{answer}}"""
-
     lang_hint = (
         "Instructions:\n"
         "1. Follow the Reasoning Skeleton above.\n"
@@ -735,23 +727,6 @@ def run_skeleton_multiturn(args, llm, tok, config, gen_sp, sk_sp, trans_sp, load
                 for batch in tqdm(chunks(task_queue, args.batch), total=(len(task_queue) // args.batch + 1)):
                     questions_to_use = [t["question"] for t in batch]
                     translated_questions = [None] * len(batch)
-                    
-                    # # [Optional Turn 0] Translate question to English
-                    # if args.translate_q:
-                    #     trans_prompts = []
-                    #     trans_indices = []
-                    #     for i, t in enumerate(batch):
-                    #         if t["lang"] != "en":
-                    #             trans_prompts.append(build_translation_prompt(tok, t["question"], t["lang"], "en"))
-                    #             trans_indices.append(i)
-                        
-                    #     if trans_prompts:
-                    #         trans_outputs = llm.generate(trans_prompts, trans_sp, use_tqdm=False)
-                    #         for idx, out in zip(trans_indices, trans_outputs):
-                    #             if out.outputs:
-                    #                 translated_q = out.outputs[0].text.strip()
-                    #                 translated_questions[idx] = translated_q
-                    #                 questions_to_use[idx] = translated_q
                     
                     # [Turn 1] Skeleton Generation
                     sk_prompts = [build_skeleton_prompt(tok, "en" if args.translate_q else t["lang"], q) 
@@ -1019,10 +994,20 @@ def main():
         gen_sp = SamplingParams(temperature=eff_temp, max_tokens=16384, n=args.rollout, top_p=eff_top_p)
         sk_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, n=16, top_p=eff_top_p)
     else:
-        gen_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, 
-                                top_k=args.top_k, top_p=eff_top_p, n=args.rollout)
-        sk_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, 
-                               top_k=args.top_k, top_p=eff_top_p)
+        gen_sp = SamplingParams(
+            temperature=eff_temp, 
+            max_tokens=args.max_tokens, 
+            top_k=args.top_k, 
+            top_p=eff_top_p, 
+            n=args.rollout
+        )
+        
+        sk_sp = SamplingParams(
+            temperature=0.0, 
+            max_tokens=args.max_tokens, 
+            top_k=args.top_k, 
+            top_p=1.0
+        )
     trans_sp = SamplingParams(temperature=0.0, max_tokens=4096, top_p=1.0)
     
     os.makedirs(os.path.dirname(args.output), exist_ok=True)

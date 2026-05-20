@@ -1076,10 +1076,20 @@ def main():
         gen_sp = SamplingParams(temperature=eff_temp, max_tokens=16384, n=args.rollout, top_p=eff_top_p)
         sk_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, n=16, top_p=eff_top_p)
     else:
-        gen_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, 
-                                top_k=args.top_k, top_p=eff_top_p, n=args.rollout)
-        sk_sp = SamplingParams(temperature=eff_temp, max_tokens=args.max_tokens, 
-                               top_k=args.top_k, top_p=eff_top_p)
+        gen_sp = SamplingParams(
+            temperature=eff_temp, 
+            max_tokens=args.max_tokens, 
+            top_k=args.top_k, 
+            top_p=eff_top_p, 
+            n=args.rollout
+        )
+        
+        sk_sp = SamplingParams(
+            temperature=0.0, 
+            max_tokens=args.max_tokens, 
+            top_k=args.top_k, 
+            top_p=1.0
+        )
     trans_sp = SamplingParams(temperature=0.0, max_tokens=4096, top_p=1.0)
     
     os.makedirs(os.path.dirname(args.output), exist_ok=True)

@@ -72,7 +72,7 @@ run_inference() {
         ROLLOUT_SUFFIX="_rollout${ROLLOUT}"
     fi
 
-    local OUTPUT="$PRJ_PATH/data/inference_result/eval/${DATASET_NAME}/${MODEL_NAME}-${METHOD}${SUFFIX}-Google-transQ${ROLLOUT_SUFFIX}.jsonl"
+    local OUTPUT="$PRJ_PATH/data/results/${DATASET_NAME}/${MODEL_NAME}-${METHOD}${SUFFIX}-Google-transQ${ROLLOUT_SUFFIX}.jsonl"
 
     # Reasoning model flag
     local REASONING_FLAG=""
@@ -102,7 +102,7 @@ run_inference() {
     echo "   ➜ Output       : $OUTPUT"
     echo
 
-    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval/eval_combined_TQ.py" \
+    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval_combined_TQ.py" \
         --method "$METHOD" \
         --model "$MODEL_PATH" \
         --dataset "$DATASET" \

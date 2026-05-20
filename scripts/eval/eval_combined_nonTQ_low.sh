@@ -1,6 +1,6 @@
 #!/bin/bash
-PRJ_PATH=/home/seoultech/MLP/hslim/SCALE
-source "$PRJ_PATH/.scale/bin/activate"
+PRJ_PATH=/home/work/mlp/hslim/LASEF2
+source "$PRJ_PATH/.lasef/bin/activate"
 
 # ==============================
 # GPUs
@@ -40,6 +40,7 @@ GPU_MEM=0.92
 DTYPE=bfloat16
 BATCH=32
 SAMPLING=1
+ROLLOUT=5
 
 
 METHOD="cot"
@@ -74,7 +75,7 @@ run_inference() {
         ROLLOUT_SUFFIX="_rollout${ROLLOUT}"
     fi
 
-    local OUTPUT="$PRJ_PATH/data/inference_result/eval/${DATASET_NAME}/${MODEL_NAME}-${METHOD}${SUFFIX}${ROLLOUT_SUFFIX}.jsonl"
+    local OUTPUT="$PRJ_PATH/data/results/${DATASET_NAME}/${MODEL_NAME}-${METHOD}${SUFFIX}${ROLLOUT_SUFFIX}.jsonl"
 
     # Reasoning model flag
     local REASONING_FLAG=""
@@ -104,7 +105,7 @@ run_inference() {
     echo "   ➜ Output       : $OUTPUT"
     echo
 
-    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval/eval_combined_nonTQ_low2.py" \
+    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval_combined_nonTQ_low.py" \
         --method "$METHOD" \
         --model "$MODEL_PATH" \
         --dataset "$DATASET" \

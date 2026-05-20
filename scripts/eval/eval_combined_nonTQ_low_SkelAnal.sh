@@ -1,6 +1,6 @@
 #!/bin/bash
-PRJ_PATH=/home/seoultech/MLP/hslim/SCALE
-source "$PRJ_PATH/.scale/bin/activate"
+PRJ_PATH=/home/work/mlp/hslim/LASEF2
+source "$PRJ_PATH/.lasef/bin/activate"
 
 # ==============================
 # GPUs
@@ -37,8 +37,9 @@ TEMP=0.0
 TOPP=1
 GPU_MEM=0.92
 DTYPE=bfloat16
-BATCH=32
+BATCH=16
 SAMPLING=1
+ROLLOUT=10
 
 METHOD="skeleton_multiturn"
 
@@ -62,8 +63,7 @@ run_inference() {
         ROLLOUT_SUFFIX="_rollout${ROLLOUT}"
     fi
 
-
-    local OUTPUT="$PRJ_PATH/data/inference_result/eval_low_anal/${DATASET_NAME}/${MODEL_NAME}-${METHOD}_skelLang-${SKEL_LANG}${ROLLOUT_SUFFIX}.jsonl"
+    local OUTPUT="$PRJ_PATH/data/results/SkelLang/${DATASET_NAME}/${MODEL_NAME}-${METHOD}_skelLang-${SKEL_LANG}${ROLLOUT_SUFFIX}.jsonl"
 
     echo "🚀 Running inference"
     echo "   ➜ Method         : $METHOD"
@@ -71,10 +71,11 @@ run_inference() {
     echo "   ➜ Dataset        : $DATASET_NAME"
     echo "   ➜ Langs          : $LANGS"
     echo "   ➜ Skeleton Lang  : $SKEL_LANG"
+    echo "   ➜ Rollout        : $ROLLOUT"
     echo "   ➜ Output         : $OUTPUT"
     echo
 
-    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval/eval_combined_nonTQ_low_anal2.py" \
+    CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES python3 "$PRJ_PATH/scripts/src/eval_combined_nonTQ_low_SkelAnal.py" \
         --method "$METHOD" \
         --model "$MODEL_PATH" \
         --dataset "$DATASET" \
@@ -88,7 +89,8 @@ run_inference() {
         --dtype "$DTYPE" \
         --langs "$LANGS" \
         --skeleton_lang "$SKEL_LANG" \
-        --sample_ratio $SAMPLING
+        --sample_ratio "$SAMPLING" \
+        $ROLLOUT_FLAG
 }
 
 # ==============================
@@ -116,9 +118,10 @@ ALL_LANGS="ta,kn,my,km,am,yo,si,gu,ne,uz,ky,ceb,eu,gn,hy,jv,ka,kk,ku,lo,mg,ml,mn
 # Available: en, es, ko, zh, ru, th
 # ==============================
 SKELETON_LANGS=(
-    # "zh"  # Chinese
-    # "ru"  # Russian
-    # "es"  # Spanish
+    "en"
+    "zh"  # Chinese
+    "ru"  # Russian
+    "es"  # Spanish
     "ko"  # Korean
     "th"  # Thai
 )

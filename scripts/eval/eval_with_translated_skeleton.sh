@@ -21,7 +21,7 @@ TOPP=1
 GPU_MEM=0.92
 DTYPE=bfloat16
 BATCH=16
-ROLLOUT=10
+ROLLOUT=1
 
 run_inference() {
     local MODEL_PATH=$1
@@ -51,7 +51,7 @@ run_inference() {
         return
     fi
 
-    local OUTPUT="$PRJ_PATH/data/results/SkelLang/mgsm-all-low-resource-translated/${MODEL_NAME}-skeleton_multiturn_skelLang-${SKEL_LANG}_translated_solved${ROLLOUT_SUFFIX}.jsonl"
+    local OUTPUT="$PRJ_PATH/data/results/SkelLang/single_rollout/${MODEL_NAME}-skeleton_multiturn_skelLang-${SKEL_LANG}_translated_solved${ROLLOUT_SUFFIX}.jsonl"
 
     echo "🚀 Running inference using translated skeleton"
     echo "   ➜ Model          : $MODEL_NAME"
@@ -85,7 +85,7 @@ MODELS=(
 # Skeleton Languages to Test
 # ==============================
 SKELETON_LANGS=(
-    "en"
+    # "en"
     "zh"  # Chinese
     "ru"  # Russian
     "es"  # Spanish

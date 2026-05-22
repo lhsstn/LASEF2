@@ -63,9 +63,18 @@ def create_requests(input_file: str, output_dir: str, target_langs: list, model:
                 
                 system_prompt = "You are a professional translator specializing in mathematical and scientific terminology."
                 user_prompt = (
-                    f"Translate the following mathematical/scientific reasoning skeleton into {lang_name}. "
-                    "Preserve the markdown structure (**bold**, bullet points). "
-                    "Keep mathematical terms, variable names, formulas, and numbers unchanged.\n\n"
+                    f"Translate the following mathematical/scientific reasoning skeleton into {lang_name}.\n\n"
+                    "Strict Translation Instructions:\n"
+                    f"1. You MUST translate all English explanatory words, concepts, technical terms, and phrases into {lang_name}. Do not leave generic noun phrases in English! Examples:\n"
+                    "   - Section headers (e.g., '**Problem Structure**' -> '**문제 구조**', '**Key Concepts / Tools**' -> '**핵심 개념 / 도구**')\n"
+                    "   - Concept items (e.g., 'Cost accounting' -> '원가 회계', 'Percentage increase' -> '백분율 증가', 'Profit calculation' -> '이익 계산')\n"
+                    "   - Explanatory descriptive variable terms in parentheses or lists (e.g., 'initial purchase price' -> '초기 구매 가격', 'renovation cost' -> '리모델링 비용', 'net profit' -> '순이익', 'final property value' -> '최종 자산 가치')\n"
+                    "2. Keep the original English ONLY for:\n"
+                    "   - Single-letter mathematical variables (e.g., 'x', 'y', 't', 'd', 'V')\n"
+                    "   - Specific proper nouns / character names (e.g., 'Janad', 'Polly', 'Wendi')\n"
+                    "   - Numbers, percentages, and currencies (e.g., '80,000', '50,000', '150%', '$')\n"
+                    "3. Absolutely preserve the original markdown structure (bold formatting, bullet points, spacing).\n"
+                    "4. Output ONLY the raw translated skeleton directly. Do NOT include any introductory or concluding remarks, explanations, or chatty conversational filler (such as 'Here is the translation:'). Your response must contain only the translated markdown content itself.\n\n"
                     f"Skeleton:\n{skeleton_text}"
                 )
                 

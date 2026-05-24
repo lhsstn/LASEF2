@@ -486,6 +486,7 @@ for skel_lang in SKELETON_LANGUAGES:
     for cot_lang in COT_LANGUAGES:
         if skel_lang in delta_matrix and cot_lang in delta_matrix[skel_lang]:
             df.loc[cot_lang, skel_lang] = delta_matrix[skel_lang][cot_lang]
+        else:
             df.loc[cot_lang, skel_lang] = np.nan
 
 x_labels = [f"{lang.upper()} ({LANGUAGE_NAMES.get(lang, lang)})" for lang in SKELETON_LANGUAGES]
@@ -501,15 +502,27 @@ ax = sns.heatmap(
     df.astype(float),
     annot=True,
     fmt=".2f",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
-    vmin=-40,
-    vmax=40,
+    vmin=-15,
+    vmax=15,
     linewidths=0.5,
     xticklabels=x_labels,
     yticklabels=y_labels,
     cbar_kws={'label': 'Accuracy Delta (%)'}
 )
+
+# AVG row 강조
+avg_idx = df.index.get_loc("AVG")
+ax.hlines(y=avg_idx, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+ax.hlines(y=avg_idx + 1, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+for tick in ax.get_yticklabels():
+    if tick.get_text() == "AVG":
+        tick.set_fontweight("bold")
+        tick.set_fontsize(13)
+n_cols = df.shape[1]
+for text in ax.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+    text.set_fontweight("bold")
 
 plt.title(f"Skeleton Language Performance Delta Heatmap\n{MODEL}\n(Native Skeleton - English Skeleton)", fontsize=14)
 plt.xlabel("Skeleton Language", fontsize=12)
@@ -577,10 +590,10 @@ ax = sns.heatmap(
     df_delta.astype(float),
     annot=annot_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
-    vmin=-40,
-    vmax=40,
+    vmin=-15,
+    vmax=15,
     linewidths=0.5,
     xticklabels=x_labels,
     yticklabels=y_labels,
@@ -608,10 +621,10 @@ ax_pure = sns.heatmap(
     df_pure_delta.astype(float),
     annot=annot_pure_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
-    vmin=-40,
-    vmax=40,
+    vmin=-15,
+    vmax=15,
     linewidths=0.5,
     xticklabels=x_labels,
     yticklabels=y_labels,
@@ -683,10 +696,10 @@ ax = sns.heatmap(
     df_delta.astype(float),
     annot=annot_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
-    vmin=-40,
-    vmax=40,
+    vmin=-15,
+    vmax=15,
     linewidths=0.5,
     xticklabels=x_labels,
     yticklabels=y_labels,
@@ -714,10 +727,10 @@ ax_pure = sns.heatmap(
     df_pure_delta.astype(float),
     annot=annot_pure_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
-    vmin=-40,
-    vmax=40,
+    vmin=-15,
+    vmax=15,
     linewidths=0.5,
     xticklabels=x_labels,
     yticklabels=y_labels,
@@ -753,6 +766,30 @@ df_count.to_csv(count_path, index=True)
 df_pure_delta.to_csv(pure_delta_path, index=True)
 df_pure_count.to_csv(pure_count_path, index=True)
 
+
+# Exclude languages list
+EXCLUDE_LANGS = ["kn", "ku", "jv", "mg", "so", "gn", "uz", "su", "yo", "qu", "ceb", "ka", "tg", "my", "km"]
+
+# Filter out exclude languages (index-wise)
+df_delta_filtered = df_delta.drop(index=EXCLUDE_LANGS, errors='ignore')
+df_count_filtered = df_count.drop(index=EXCLUDE_LANGS, errors='ignore')
+df_pure_delta_filtered = df_pure_delta.drop(index=EXCLUDE_LANGS, errors='ignore')
+df_pure_count_filtered = df_pure_count.drop(index=EXCLUDE_LANGS, errors='ignore')
+
+# Paths for filtered CSVs
+delta_filtered_path = f"{SAVE_DIR}/{filename_prefix}_strict_delta_filtered.csv"
+count_filtered_path = f"{SAVE_DIR}/{filename_prefix}_strict_count_filtered.csv"
+pure_delta_filtered_path = f"{SAVE_DIR}/{filename_prefix}_pure_delta_filtered.csv"
+pure_count_filtered_path = f"{SAVE_DIR}/{filename_prefix}_pure_count_filtered.csv"
+
+# Save filtered CSVs
+df_delta_filtered.to_csv(delta_filtered_path, index=True)
+df_count_filtered.to_csv(count_filtered_path, index=True)
+df_pure_delta_filtered.to_csv(pure_delta_filtered_path, index=True)
+df_pure_count_filtered.to_csv(pure_count_filtered_path, index=True)
+
+print(f"✔ strict_delta_filtered / strict_count_filtered CSV 저장 완료: {delta_filtered_path}")
+print(f"✔ pure_delta_filtered / pure_count_filtered CSV 저장 완료: {pure_delta_filtered_path}")
 print(f"✔ strict_delta / strict_count CSV 저장 완료: {delta_path}")
 print(f"✔ pure_delta / pure_count CSV 저장 완료: {pure_delta_path}")
 
@@ -830,7 +867,7 @@ else:
         df.astype(float),
         annot=True,
         fmt=".2f",
-        cmap=cmap,
+        cmap="RdBu_r",
         center=0,
         vmin=-15,
         vmax=15,
@@ -840,6 +877,18 @@ else:
         cbar_kws={'label': 'Accuracy Delta (%)'}
     )
     
+    # AVG row 강조
+    avg_idx = df.index.get_loc("AVG")
+    ax.hlines(y=avg_idx, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+    ax.hlines(y=avg_idx + 1, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+    for tick in ax.get_yticklabels():
+        if tick.get_text() == "AVG":
+            tick.set_fontweight("bold")
+            tick.set_fontsize(13)
+    n_cols = df.shape[1]
+    for text in ax.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+        text.set_fontweight("bold")
+
     plt.title(f"Skeleton Language Performance Delta Heatmap\n{MODEL}\n(Non-English Skeleton - English Skeleton)", fontsize=14)
     plt.xlabel("Skeleton Language", fontsize=12)
     plt.ylabel("CoT Language (question_language)", fontsize=12)
@@ -923,7 +972,7 @@ ax = sns.heatmap(
     df_delta.astype(float),
     annot=annot_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
     vmin=-15,
     vmax=15,
@@ -951,7 +1000,7 @@ ax_pure = sns.heatmap(
     df_pure_delta.astype(float),
     annot=annot_pure_combined,
     fmt="",
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
     vmin=-15,
     vmax=15,
@@ -1073,7 +1122,7 @@ ax = sns.heatmap(
     annot=True,
     fmt=".2f",
     annot_kws={"size": 15},
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
     vmin=-12,
     vmax=12,
@@ -1089,6 +1138,18 @@ for group_name, langs in SORT_ORDER_GROUPS.items():
     if count > 0:
         current_idx += count
         ax.hlines(current_idx, *ax.get_xlim(), colors='white', linewidth=1)
+
+# AVG row 강조
+avg_idx = df.index.get_loc("AVG")
+ax.hlines(y=avg_idx, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+ax.hlines(y=avg_idx + 1, xmin=0, xmax=df.shape[1], colors="black", linewidth=2.0)
+for tick in ax.get_yticklabels():
+    if tick.get_text() == "AVG":
+        tick.set_fontweight("bold")
+        tick.set_fontsize(13)
+n_cols = df.shape[1]
+for text in ax.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+    text.set_fontweight("bold")
 
 plt.title(f"Skeleton Language Performance Delta Heatmap\n{MODEL}\n(Non-English Skeleton - English Skeleton)", fontsize=14)
 plt.xlabel("Skeleton Language", fontsize=12)
@@ -1108,7 +1169,7 @@ ax_pure = sns.heatmap(
     annot=True,
     fmt=".2f",
     annot_kws={"size": 15},
-    cmap=cmap,
+    cmap="RdBu_r",
     center=0,
     vmin=-12,
     vmax=12,
@@ -1125,6 +1186,18 @@ for group_name, langs in SORT_ORDER_GROUPS.items():
         current_idx += count
         ax_pure.hlines(current_idx, *ax_pure.get_xlim(), colors='white', linewidth=1)
 
+# AVG row 강조
+avg_idx = df_pure.index.get_loc("AVG")
+ax_pure.hlines(y=avg_idx, xmin=0, xmax=df_pure.shape[1], colors="black", linewidth=2.0)
+ax_pure.hlines(y=avg_idx + 1, xmin=0, xmax=df_pure.shape[1], colors="black", linewidth=2.0)
+for tick in ax_pure.get_yticklabels():
+    if tick.get_text() == "AVG":
+        tick.set_fontweight("bold")
+        tick.set_fontsize(13)
+n_cols = df_pure.shape[1]
+for text in ax_pure.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+    text.set_fontweight("bold")
+
 plt.title(f"Skeleton Language Pure Performance Delta Heatmap\n{MODEL}\n(Non-English Skeleton - English Skeleton)", fontsize=14)
 plt.xlabel("Skeleton Language", fontsize=12)
 plt.ylabel("CoT Language (Grouped)", fontsize=12)
@@ -1139,5 +1212,178 @@ plt.show()
 
 # ========================================
 # CELL INDEX: 14
+# ========================================
+# =========================================================
+# 📊 10 Languages Performance Delta Analysis
+# =========================================================
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+TRANSLATED = globals().get('TRANSLATED', False)
+MODEL = globals().get('MODEL', "Qwen2.5-7B-Instruct")
+ROLLOUT = globals().get('ROLLOUT', True)
+ROLLOUT_COUNT = globals().get('ROLLOUT_COUNT', 5)
+
+dataset_type = "TransQ" if TRANSLATED else "Exist"
+rollout_str = f"rollout{ROLLOUT_COUNT}" if ROLLOUT else "single"
+filename_prefix = f"{dataset_type}_{MODEL}_{rollout_str}"
+
+# User specified 10 languages
+SELECTED_LANGS = ['hy', 'lo', 'eu', 'mt', 'mn', 'ug', 'kk', 'am', 'ml', 'ta']
+
+# Group ordering for visual coherence
+SORT_ORDER_GROUPS_10 = {
+    "Consistent positive": ['hy', 'lo', 'eu'],
+    "Quality-dependent": ['mt'],
+    "Asymmetric/Mixed": ['mn', 'ug', 'kk', 'am'],
+    "Stable negative": ['ml', 'ta']
+}
+
+data_path = f"{SAVE_DIR}/{filename_prefix}_strict_delta.csv"
+pure_data_path = f"{SAVE_DIR}/{filename_prefix}_pure_delta.csv"
+
+df_raw = pd.read_csv(data_path, index_col=0)
+df_pure_raw = pd.read_csv(pure_data_path, index_col=0)
+
+DESIRED_ORDER_10 = []
+for group in SORT_ORDER_GROUPS_10.values():
+    DESIRED_ORDER_10.extend(group)
+
+# Extract and sort 10 languages
+available_langs_10 = [lang for lang in DESIRED_ORDER_10 if lang in df_raw.index]
+
+df_10 = df_raw.loc[available_langs_10].copy()
+df_pure_10 = df_pure_raw.loc[available_langs_10].copy()
+
+count_data_path = f"{SAVE_DIR}/{filename_prefix}_strict_count.csv"
+pure_count_data_path = f"{SAVE_DIR}/{filename_prefix}_pure_count.csv"
+
+df_count_raw = pd.read_csv(count_data_path, index_col=0)
+df_pure_count_raw = pd.read_csv(pure_count_data_path, index_col=0)
+
+df_count_10 = df_count_raw.loc[available_langs_10].copy()
+df_pure_count_10 = df_pure_count_raw.loc[available_langs_10].copy()
+
+# Calculate AVG row
+df_10.loc["AVG"] = df_10.mean(axis=0, skipna=True)
+df_pure_10.loc["AVG"] = df_pure_10.mean(axis=0, skipna=True)
+df_count_10.loc["AVG"] = df_count_10.mean(axis=0, skipna=True)
+df_pure_count_10.loc["AVG"] = df_pure_count_10.mean(axis=0, skipna=True)
+
+y_labels_10 = [f"{lang.upper()}" for lang in available_langs_10] + ["AVG"]
+x_labels_10 = [f"{lang.upper()}" for lang in df_10.columns]
+
+# ----------------- Save 10 Languages CSVs -----------------
+delta_10_path = f"{SAVE_DIR}/{filename_prefix}_strict_delta_10langs.csv"
+pure_delta_10_path = f"{SAVE_DIR}/{filename_prefix}_pure_delta_10langs.csv"
+count_10_path = f"{SAVE_DIR}/{filename_prefix}_strict_count_10langs.csv"
+pure_count_10_path = f"{SAVE_DIR}/{filename_prefix}_pure_count_10langs.csv"
+
+df_10.to_csv(delta_10_path, index=True)
+df_pure_10.to_csv(pure_delta_10_path, index=True)
+df_count_10.to_csv(count_10_path, index=True)
+df_pure_count_10.to_csv(pure_count_10_path, index=True)
+print(f"✔ strict_delta_10langs CSV 저장 완료: {delta_10_path}")
+print(f"✔ pure_delta_10langs CSV 저장 완료: {pure_delta_10_path}")
+print(f"✔ strict_count_10langs CSV 저장 완료: {count_10_path}")
+print(f"✔ pure_count_10langs CSV 저장 완료: {pure_count_10_path}")
+
+# ----------------- Plot 10 Languages Strict Heatmap -----------------
+plt.figure(figsize=(10, 12))
+ax_10 = sns.heatmap(
+    df_10.astype(float),
+    annot=True,
+    fmt=".2f",
+    annot_kws={"size": 15},
+    cmap="RdBu_r",
+    center=0,
+    vmin=-12,
+    vmax=12,
+    linewidths=0.5,
+    xticklabels=x_labels_10,
+    yticklabels=y_labels_10,
+    cbar_kws={'label': 'Accuracy Delta (%)', 'shrink': 0.5}
+)
+
+current_idx = 0
+for group_name, langs in SORT_ORDER_GROUPS_10.items():
+    count = sum(1 for lang in langs if lang in available_langs_10)
+    if count > 0:
+        current_idx += count
+        ax_10.hlines(current_idx, *ax_10.get_xlim(), colors='white', linewidth=1)
+
+# AVG row 강조
+avg_idx = df_10.index.get_loc("AVG")
+ax_10.hlines(y=avg_idx, xmin=0, xmax=df_10.shape[1], colors="black", linewidth=2.0)
+ax_10.hlines(y=avg_idx + 1, xmin=0, xmax=df_10.shape[1], colors="black", linewidth=2.0)
+for tick in ax_10.get_yticklabels():
+    if tick.get_text() == "AVG":
+        tick.set_fontweight("bold")
+        tick.set_fontsize(13)
+n_cols = df_10.shape[1]
+for text in ax_10.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+    text.set_fontweight("bold")
+
+plt.title(f"Skeleton Language Performance Delta Heatmap (10 Languages)\n{MODEL}\n(Non-English Skeleton - English Skeleton)", fontsize=14)
+plt.xlabel("Skeleton Language", fontsize=12)
+plt.ylabel("CoT Language (Grouped - 10 Languages)", fontsize=12)
+
+SAVE_PATH_10 = f"{FIG_DIR}/{filename_prefix}_strict_delta_heatmap_sorted_10langs.pdf"
+plt.tight_layout()
+plt.savefig(SAVE_PATH_10, dpi=500, bbox_inches='tight')
+print(f"✅ Sorted Heatmap (10 Languages) saved to: {SAVE_PATH_10}")
+plt.show()
+
+# ----------------- Plot 10 Languages Pure Heatmap -----------------
+plt.figure(figsize=(10, 12))
+ax_pure_10 = sns.heatmap(
+    df_pure_10.astype(float),
+    annot=True,
+    fmt=".2f",
+    annot_kws={"size": 15},
+    cmap="RdBu_r",
+    center=0,
+    vmin=-12,
+    vmax=12,
+    linewidths=0.5,
+    xticklabels=x_labels_10,
+    yticklabels=y_labels_10,
+    cbar_kws={'label': 'Pure Accuracy Delta (%)', 'shrink': 0.5}
+)
+
+current_idx = 0
+for group_name, langs in SORT_ORDER_GROUPS_10.items():
+    count = sum(1 for lang in langs if lang in available_langs_10)
+    if count > 0:
+        current_idx += count
+        ax_pure_10.hlines(current_idx, *ax_pure_10.get_xlim(), colors='white', linewidth=1)
+
+# AVG row 강조
+avg_idx = df_pure_10.index.get_loc("AVG")
+ax_pure_10.hlines(y=avg_idx, xmin=0, xmax=df_pure_10.shape[1], colors="black", linewidth=2.0)
+ax_pure_10.hlines(y=avg_idx + 1, xmin=0, xmax=df_pure_10.shape[1], colors="black", linewidth=2.0)
+for tick in ax_pure_10.get_yticklabels():
+    if tick.get_text() == "AVG":
+        tick.set_fontweight("bold")
+        tick.set_fontsize(13)
+n_cols = df_pure_10.shape[1]
+for text in ax_pure_10.texts[avg_idx * n_cols : (avg_idx + 1) * n_cols]:
+    text.set_fontweight("bold")
+
+plt.title(f"Skeleton Language Pure Performance Delta Heatmap (10 Languages)\n{MODEL}\n(Non-English Skeleton - English Skeleton)", fontsize=14)
+plt.xlabel("Skeleton Language", fontsize=12)
+plt.ylabel("CoT Language (Grouped - 10 Languages)", fontsize=12)
+
+PURE_SAVE_PATH_10 = f"{FIG_DIR}/{filename_prefix}_pure_delta_heatmap_sorted_10langs.pdf"
+plt.tight_layout()
+plt.savefig(PURE_SAVE_PATH_10, dpi=500, bbox_inches='tight')
+print(f"✅ Sorted Pure Heatmap (10 Languages) saved to: {PURE_SAVE_PATH_10}")
+plt.show()
+
+
+# ========================================
+# CELL INDEX: 15
 # ========================================
 df

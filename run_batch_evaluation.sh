@@ -10,13 +10,13 @@ MODEL="Qwen2.5-7B-Instruct"
 
 # List of target datasets to evaluate
 DATASETS=(
-  "${PRJ_PATH}/data/results/SkelLang_MGSM/3_rollout"
-  "${PRJ_PATH}/data/results/SkelLang_MGSM/5_rollout"
+  # "${PRJ_PATH}/data/results/SkelLang_MGSM/3_rollout"
+  # "${PRJ_PATH}/data/results/SkelLang_MGSM/5_rollout"
   "${PRJ_PATH}/data/results/SkelLang_MGSM/10_rollout"
   "${PRJ_PATH}/data/results/SkelLang_MGSM/10_rollout_exist"
-  "${PRJ_PATH}/data/results/SkelLang_MGSM/single_rollout"
+  # "${PRJ_PATH}/data/results/SkelLang_MGSM/single_rollout"
 #   "${PRJ_PATH}/data/results/SkelLang_MGSM/translated_skeleton"
-  "${PRJ_PATH}/data/results/SkelLang_MGSM/translated_skeleton_solved"
+  # "${PRJ_PATH}/data/results/SkelLang_MGSM/translated_skeleton_solved"
 )
 
 echo "========================================================"

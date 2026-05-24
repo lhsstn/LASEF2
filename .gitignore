@@ -10,6 +10,7 @@ data/
 datasets/
 dataframe/
 figure/
+_2026_May__ARR__Skeleton/
 
 # Python cache
 __pycache__/

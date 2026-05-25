@@ -1,0 +1,117 @@
+\begin{table*}[!t]
+\centering
+\footnotesize
+% \setlength{\tabcolsep}{2.5pt}
+% \renewcommand{\arraystretch}{1.15}
+\resizebox{\textwidth}{!}{%
+% 컬럼 정의 수정: AVG 컬럼(8, 14, 20번째 열)에 배경색 적용
+\begin{tabular}{lcccccc>{\columncolor{yellow!15}}c|ccccc>{\columncolor{yellow!15}}c|ccccc>{\columncolor{yellow!15}}c}
+\toprule
+\multirow{2}{*}{\centering\textbf{Method}} & \textbf{Language} & \multicolumn{6}{c}{\textbf{MGSM}} & \multicolumn{6}{c}{\textbf{MATH-500}} & \multicolumn{6}{c}{\textbf{PolyMath}} \\
+\cmidrule(lr){2-2} \cmidrule(lr){3-8} \cmidrule(lr){9-14} \cmidrule(lr){15-20}
+& \textbf{($\ell_q,\ell_s,\ell_a$)} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{AVG.} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{AVG.} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{AVG.} \\
+\midrule
+\rowcolor{gray!10} \multicolumn{20}{c}{\textbf{\textit{Qwen2.5-7B-Instruct}}} \\
+\midrule
+\textsc{CoT-$\ell_t$} & $\ell_t, - , \ell_t$ &
+79.9 & 80.7 & 69.7 & 80.2 & 16.0 & 65.3 & 
+56.4 & 57.5 & 47.8 & 49.8 & 14.2 & 45.1 & 
+30.8 & 31.0 & 26.4 & 26.1 & 5.1  & 23.9 \\
++ \textsc{Skeleton} & $\ell_t, en , \ell_t$ &
+80.7 & 83.8 & 71.0 & 79.0 & 22.9 & 67.5 & 
+55.4 & 57.7 & 49.3 & 51.9 & 20.4 & 46.9 & 
+30.6 & 32.1 & 28.0 & 27.6 & 7.4  & 25.1 \\
+\textsc{CoT-$en^{\dagger}$} & $en, - , \ell_t$ &
+82.3 & 84.3 & 74.5 & 78.1 & 63.1 & 76.5 & 
+56.0 & 57.4 & 51.6 & 49.5 & 24.4 & 47.8 & 
+29.7 & 32.1 & 27.5 & 29.8 & 20.3 & 27.9 \\
++ \textsc{Skeleton} & $en, en , \ell_t$ &
+82.3 & 85.9 & 73.2 & 78.9 & 71.7 & 78.4 & 
+57.4 & 58.2 & 52.3 & 53.8 & 29.8 & 50.3 & 
+32.0 & 34.4 & 27.7 & 30.4 & 19.9 & 28.9 \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{20}{c}{\textbf{\textit{Qwen2.5-14B-Instruct}}} \\
+\midrule
+\textsc{CoT-$\ell_t$} & $\ell_t, - , \ell_t$ &
+88.8 & 90.0 & 77.9 & 87.6 & 45.0 & 77.9 &  
+58.3 & 62.6 & 54.7 & 57.4 & 30.1 & 52.6 & 
+31.8 & 36.7 & 31.6 & 30.9 & 14.7 & 29.1 \\
++ \textsc{Skeleton} & $\ell_t, en , \ell_t$ &
+88.0 & 90.0 & 80.7 & 85.9 & 50.7 & 79.1 & 
+59.4 & 64.0 & 56.9 & 59.9 & 35.2 & 55.1 & 
+34.1 & 36.9 & 32.2 & 33.3 & 15.0 & 30.3 \\
+\textsc{CoT-$en^{\dagger}$} & $en, - , \ell_t$ & 
+83.1 & 88.3 & 81.2 & 84.8 & 74.5 & 82.4 & 
+58.8 & 60.2 & 53.8 & 55.1 & 39.1 & 53.4 & 
+32.3 & 36.5 & 30.1 & 32.0 & 24.0 & 31.0 \\
++ \textsc{Skeleton} & $en, en , \ell_t$ & 
+86.8 & 87.9 & 82.5 & 84.8 & 74.5 & 83.3 & 
+59.6 & 62.2 & 55.2 & 55.8 & 40.4 & 54.6 &
+33.7 & 35.4 & 32.2 & 32.0 & 26.9 & 32.0 \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{20}{c}{\textbf{\textit{Qwen2.5-72B-Instruct}}} \\
+\midrule
+\textsc{CoT-$\ell_t$} & $\ell_t, - , \ell_t$ &
+88.3 & 91.6 & 83.9 & 90.8 & 68.0 & 84.5 & 
+63.1 & 63.8 & 63.2 & 61.6 & 46.3 & 59.6 & 
+36.1 & 37.5 & 34.5 & 34.7 & 31.0 & 34.8 \\
++ \textsc{Skeleton} & $\ell_t, en , \ell_t$ &
+88.0 & 89.2 & 84.7 & 89.6 & 70.1 & 84.3 & 
+65.8 & 63.8 & 62.4 & 63.4 & 54.3 & 61.9 & 
+37.1 & 37.5 & 37.0 & 35.0 & 32.0 & 35.7 \\
+\textsc{CoT-$en^{\dagger}$} & $en, - , \ell_t$ & 
+85.5 & 91.5 & 82.7 & 86.3 & 85.5 & 86.3 & 
+62.2 & 64.4 & 63.1 & 61.7 & 56.3 & 61.5 & 
+34.2 & 35.8 & 35.3 & 35.8 & 40.6 & 36.3 \\
++ \textsc{Skeleton} & $en, en , \ell_t$ & 
+86.8 & 90.7 & 83.1 & 86.7 & 86.7 & 86.8 & 
+64.2 & 64.0 & 61.1 & 62.5 & 60.0 & 62.4 & 
+34.0 & 37.9 & 36.2 & 33.1 & 39.3 & 36.1 \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{20}{c}{\textbf{\textit{Llama-3.1-8B-Instruct}}} \\
+\midrule
+\textsc{CoT-$\ell_t$} & $\ell_t, - , \ell_t$ &
+71.5 & 74.7 & 58.6 & 65.5 & 61.7 & 66.4 & 
+33.2 & 37.7 & 29.8 & 31.0 & 31.9 & 32.7 & 
+23.6 & 24.9 & 26.2 & 19.3 & 27.6 & 24.3 \\
++ \textsc{Skeleton} & $\ell_t, en , \ell_t$ &
+68.3 & 75.5 & 61.0 & 65.1 & 63.8 & 66.7 & 
+34.7 & 35.6 & 34.0 & 32.0 & 34.2 & 34.1 &
+24.1 & 26.3 & 24.4 & 21.1 & 29.1 & 25.0 \\
+\textsc{CoT-$en^{\dagger}$} & $en, - , \ell_t$ &
+69.3 & 78.3 & 64.9 & 69.1 & 68.3 & 70.0 & 
+33.8 & 41.6 & 29.7 & 33.3 & 32.5 & 34.2 & 
+22.4 & 27.6 & 24.4 & 21.6 & 32.4 & 25.7 \\
++ \textsc{Skeleton} & $en, en , \ell_t$ &
+69.8 & 73.9 & 63.7 & 70.3 & 66.7 & 68.9 & 
+37.7 & 37.3 & 32.9 & 31.6 & 38.8 & 35.7 & 
+26.3 & 28.0 & 27.3 & 22.4 & 33.9 & 27.6 \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{20}{c}{\textbf{\textit{Llama-3.1-70B-Instruct}}} \\
+\midrule
+\textsc{CoT-$\ell_t$} & $\ell_t, - , \ell_t$ &
+86.3 & 88.0 & 83.9 & 86.8 & 83.9 & 85.8 &  
+50.1 & 50.1 & 49.0 & 51.0 & 48.6 & 49.8 & 
+29.8 & 28.6 & 32.2 & 29.1 & 35.0 & 30.9 \\
++ \textsc{Skeleton} & $\ell_t, en , \ell_t$ &
+88.8 & 81.5 & 82.7 & 87.2 & 78.9 & 83.8 &
+50.3 & 45.6 & 50.4 & 52.3 & 49.1 & 49.5 & 
+30.7 & 29.2 & 31.2 & 30.4 & 33.8 & 31.1 \\
+\textsc{CoT-$en^{\dagger}$} & $en, - , \ell_t$ & 
+85.5 & 88.4 & 84.7 & 85.1 & 83.3 & 85.4 & 
+49.5 & 50.9 & 51.9 & 47.2 & 51.1 & 50.1 & 
+29.4 & 32.9 & 32.9 & 28.7 & 36.3 & 32.0 \\
++ \textsc{Skeleton} & $en, en , \ell_t$ & 
+85.9 & 82.3 & 83.9 & 82.7 & 82.5 & 83.5 & 
+51.1 & 50.9 & 51.2 & 49.0 & 48.2 & 50.1 & 
+29.2 & 29.7 & 31.7 & 28.3 & 36.3 & 31.0 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Results on MGSM, MATH-500, and PolyMath. $(\ell_q,\ell_s,\ell_a)$ denote the query, skeleton, and answer languages, respectively. CoT-$en^{\dagger}$ indicates queries translated into English using Google Translate, and the skeleton language is fixed to English unless otherwise noted. `AVG.' denotes the average over five languages (zh, es, ko, th, sw).}
+\label{tab:combined-appendix-table}
+\end{table*}

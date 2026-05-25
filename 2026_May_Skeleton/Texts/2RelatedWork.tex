@@ -1,0 +1,15 @@
+\section{Related Work}
+\paragraph{English-Pivot Reasoning}
+While Chain-of-Thought (CoT) prompting~\citep{cot-neurips2022} has enhanced LLM reasoning, a significant performance gap persists in non-English contexts, particularly in mathematical tasks~\citep{shi2022language, mega-emnlp2023, wang2025polymath}. 
+To mitigate this disparity, English-pivot strategies that translate inputs or reasoning processes into English have been proposed to leverage the models' strong English priors~\citep{clp-emnlp2023, xlt-emnlp2023, trans-allneed-2025naacl, etxaniz2024multilingual}. However, this approach often sacrifices interpretability for non-English users by generating final answers in English, thereby limiting practical utility in native-language applications~\citep{multilingual-prompting-emnlp2025,lee2025controlling,qi2025models}.
+
+\paragraph{Structured Reasoning} 
+Research on structure-aware prompting has evolved from Zero-shot CoT~\citep{kojima2022large} to more sophisticated approaches such as Skeleton-of-Thought~\citep{ning2023skeleton}, Plan-and-Solve~\citep{wang2023plan}, and Program-of-Thought~\citep{chen2022program}. These methods have demonstrated that explicitly structuring reasoning enhances logical consistency~\citep{zhou2022least,yao2023tree,khot2022decomposed}. While efforts have been made to extend structured reasoning to multilingual contexts through cross-lingual instruction tuning~\citep{chai2025xcot,lai2024mcot}, prior work has predominantly fixed the skeleton language to English, overlooking the impact of language combinations between the structural guide and the final response~\citep{qi2025sot,li2024eliciting}.
+
+In this study, we refer to such structured guides as a \textit{skeleton} and adopt the inference structure of \citet{qi2025sot} as a baseline to ensure experimental control. By fixing the structure and manipulating only the skeleton's language, we systematically analyze how language configuration affects multilingual reasoning performance.
+
+\begin{comment}
+Research on structure-aware prompting, such as Skeleton-of-Thought~\citep{ning2023skeleton} and Plan-and-Solve~\citep{wang2023plan}, has demonstrated that explicitly structuring reasoning enhances logical consistency~\citep{zhou2022least,yao2023tree,khot2022decomposed}. While applied in multilingual contexts, prior studies have predominantly fixed the language configuration to English, overlooking the impact of language combinations between the skeleton and the final response~\citep{qi2025sot,li2024eliciting}.
+
+In this study, we refer to such structured guides as a \textit{skeleton} and adopt the inference structure of \citet{qi2025sot} as a baseline to ensure experimental control. By fixing the structure and manipulating only the skeleton's language, we systematically analyze how language configuration affects multilingual reasoning performance.
+\end{comment}

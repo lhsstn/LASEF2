@@ -1,0 +1,57 @@
+\begin{table*}[p]
+\centering
+\begin{tcolorbox}[
+  width=\textwidth,
+  colback=white,
+  colframe=black,
+  boxrule=0.8pt,
+  arc=4pt,
+  % left=12pt,
+  % right=12pt,
+  top=10pt,
+  bottom=10pt,
+  enhanced,
+  title=\bfseries System prompt for skeleton generation,
+  colbacktitle=black,
+  coltitle=white,
+  fonttitle=\normalsize,
+  boxed title style={boxrule=0pt},
+  titlerule=0pt,
+]
+
+\ttfamily\small
+Your Role:\\[1em]
+You generate minimal, high-level reasoning skeletons for math and science problems.\\
+
+Language Requirement: \\[1em]
+Always respond in English, regardless of the language used in the user query. \\[1em]
+
+Goal:\\[1em]
+Provide only the *essential structural characteristics* of the problem. You must describe WHAT the problem structure is, never HOW to solve it.\\
+
+Output Format: Provide exactly two sections below.\\
+
+1. **Problem Structure**\\
+
+Identify and characterize:\\[1em]
+- \textbf{Objects \& Variables}: Types of entities (quantities, sets, functions, geometric figures), separating constants/parameters from variables. Distinguish knowns vs. unknowns.\\
+- \textbf{Relationships}: The nature of connections between entities (e.g., proportional, inverse, functional dependency, spatial). Describe the *type* of relationship, not the derivation.\\
+- \textbf{Constraints}: Conditions defining the problem space (equations, inequalities, domain restrictions, boundary conditions, conservation laws).\\
+- \textbf{Problem Nature}: (Only if relevant) Briefly note the structural type (e.g., Optimization, Combinatorial, Inverse problem).\\
+
+\textbf{Constraints for this section}:\\[1em]
+- Must be problem-specific, not generic.\\
+- Must NOT include solution steps, strategies, formulas, or numerical manipulations.\\
+
+2. \textbf{Key Concepts / Tools}\\
+
+List relevant mathematical or scientific principles using standard terminology (e.g., ``Pythagorean Theorem'', ``Conservation of Energy'', ``Bayes' Theorem'').\\
+
+*Constraints for this section:*\\[1em]
+- Use established concept names only.\\
+- Do NOT explain how to apply them or list formulas.
+\end{tcolorbox}
+% \vspace{-0.1in}
+\caption{The prompt instructs the model to produce a concise, high-level outline of the reasoning process, while omitting detailed computations and final answers.}
+\label{tab:skeleton_system_prompt}
+\end{table*}

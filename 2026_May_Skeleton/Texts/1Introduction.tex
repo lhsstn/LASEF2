@@ -1,0 +1,46 @@
+\section{Introduction}
+
+Recent studies on structured reasoning prompting have employed an approach~\citep{wang2023plan, khot2022decomposed}.
+This approach guides a model’s reasoning process by concisely presenting the core flow of thought required for problem solving. In this paper, we refer to such explicit representations of reasoning flow as a \textit{skeleton}. A skeleton provides a high-level indication of the direction or strategy for solving a given input query, upon which more detailed reasoning and the final answer are subsequently generated~\citep{ning2023skeleton,li2024eliciting,qi2025sot}. A key property of skeleton-based reasoning is its \emph{training-free} nature, which enables its use in low-resource language scenarios.
+
+However, when applying skeletons in multilingual settings, there exists a fundamental design challenge. A skeleton-based reasoning pipeline implicitly involves three language choices: (1) the language of the input query, (2) the language in which the skeleton is expressed, and (3) the language in which reasoning and the final answer are generated. Despite the fact that different combinations of these elements may lead the model to rely on different linguistic priors and reasoning trajectories~\citep{wang-etal-2025-language-mixing, wang2024seaeval}, prior work has not systematically explored this design space of language combinations.
+
+Prior work on skeleton-based reasoning has largely assumed an English-centric setting~\citep{zhou2022least,qi2025sot}, focusing on how to design the structure or prompt format of skeletons to improve performance. While some studies have applied skeletons to multilingual or cross-domain scenarios~\citep{clp-emnlp2023,xlt-emnlp2023}, most of them either fix the skeleton language to English or treat language choice as a secondary factor. As a result, the crucial question of which language should be utilized for the reasoning skeleton remains insufficiently analyzed for real-world multilingual deployment.
+
+Meanwhile, recent prior studies have reported that even the same model can exhibit different performance depending on the language in which reasoning is carried out~\citep{qi2025models}, and have shown that performing reasoning after translating the query into English can be effective~\citep{shi2022language,trans-allneed-2025naacl, zhu2024question}. These findings suggest that skeletons are not merely formal tools, but may function as a medium that activates language-specific reasoning priors formed during pretraining~\citep{etxaniz2024multilingual}. At the same time, they also imply that the effectiveness of skeletons may not be uniform across languages~\citep{qian2024large, chen2023breaking}.
+
+In this context, we pose the following research question: \textit{Under which linguistic conditions does skeleton-based reasoning operate effectively, and how do different combinations of input language, skeleton language, and reasoning/answer language affect reasoning performance? In particular, how do these effects differ in low-resource languages?} This question goes beyond asking ``which skeleton is effective,'' and instead addresses a more fundamental design issue: which language should be used for the skeleton.
+
+To investigate this question, we propose \textit{Language-Aware Skeleton Exploration}. Here, exploration does not involve any new algorithmic learning or parameter updates; instead, it refers to an empirical approach that systematically analyzes performance variations across different language combinations while keeping the skeleton structure and format fixed, with the goal of identifying effective language configurations. This setup allows us to disentangle the impact of skeleton design itself from that of language choice.
+
+Our study focuses on mathematical reasoning, a domain where multilingual performance gaps are known to be significant due to limited reasoning capabilities in non-English languages~\citep{qi2025models}. We conduct experiments across benchmarks of varying difficulty levels, models of different scales, and a wide range of language settings spanning high-resource to low-resource languages. Through this comprehensive evaluation, we systematically analyze how the effectiveness of skeletons varies across languages and conditions. Building on these findings, we derive practical insights for the reliable use of skeleton-based reasoning in multilingual environments. In summary, the contributions of this paper are as follows:
+% \begin{itemize}
+%     \item We formalize the combination of input language, skeleton language, and reasoning/answer language as a core design variable in multilingual skeleton-based reasoning.
+%     \item We propose a language-aware skeleton exploration framework that is applicable in a training-free manner, and systematically analyze performance variations across different language combinations.
+%     % \item Through extensive evaluations on mathematical reasoning benchmarks, we demonstrate that the effectiveness of skeletons can be non-uniform across languages and conditions, and discuss both the potential and limitations of skeleton-based reasoning in low-resource language settings.
+%     \item Through extensive math benchmarks, we demonstrate the non-uniform effectiveness of skeletons across languages and discuss their implications for low-resource settings.
+% \end{itemize}
+
+\begin{itemize}
+    \item We formalize the combination of input, skeleton, and reasoning languages as a core design variable in multilingual skeleton-based reasoning, and propose a training-free framework (\Lasef) to analyze this design space.
+    
+    \item Combining greedy decoding and multi-rollout evaluation across math benchmarks of varying difficulty, we demonstrate the non-uniform effectiveness of skeleton languages and validate the robustness of the observed effects.
+    
+    \item We identify three distinct patterns of skeleton-language effects: stable cross-lingual, evaluation-dependent, and asymmetric. These patterns are supported by a translation ablation that disentangles skeleton generation quality from cross-lingual alignment.
+\end{itemize}
+
+
+
+
+
+% \begin{itemize}[leftmargin=*,topsep=-2px,partopsep=0px]
+%     \item We formalize the language configuration (input, skeleton, and reasoning languages) as a core design variable in multilingual skeleton-based reasoning.
+%     \item We propose a language-aware skeleton exploration framework that is applicable in a training-free manner, and systematically analyze performance variations across different language combinations.
+    % \item Through extensive math benchmarks, we demonstrate the non-uniform effectiveness of skeletons across languages and discuss their implications for low-resource settings.
+% \end{itemize}
+
+% \begin{itemize}
+%     \item We formalize the combination of input language, skeleton language, and reasoning/answer language as a core design variable in multilingual skeleton-based reasoning.
+%     \item We propose a language-aware skeleton exploration framework that is applicable in a training-free manner, and systematically analyze performance variations across different language combinations.
+%     \item Through extensive evaluations on mathematical reasoning benchmarks, we demonstrate that the effectiveness of skeletons can be non-uniform across languages and conditions, and discuss both the potential and limitations of skeleton-based reasoning in low-resource language settings.
+% \end{itemize}

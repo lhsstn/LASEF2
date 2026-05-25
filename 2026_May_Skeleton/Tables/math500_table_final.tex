@@ -1,0 +1,50 @@
+% =========================
+% MATH-500 Results by Method
+% =========================
+\begin{table*}[t]
+\tiny
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\caption{MATH-500 Results: Accuracy (\%) by Method across Languages}
+\label{tab:math500-method-language}
+
+\begin{tabular}{llcccccccc}
+\toprule
+\textbf{Method} & & \textbf{en} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{te} & \textbf{avg} \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-7B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 60.4 & 56.1 & 58.0 & 47.8 & 49.8 & 16.7 & 29.6 & 43.0 \\
+& +Skel & - & 53.5 & 58.0 & 48.5 & 52.7 & 19.7 & 27.8 & 43.4 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 60.4 & 56.0 & 57.4 & 51.6 & 49.5 & 24.4 & 35.8 & 45.8 \\
+& +Skel & - & 57.4 & 58.2 & 52.3 & 53.4 & 29.8 & 33.6 & 47.4 \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-14B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 63.8 & 58.3 & 62.6 & 54.7 & 57.4 & 28.1 & 43.4 & 50.8 \\
+& +Skel & - & 59.4 & 64.0 & 56.9 & 59.9 & 31.2 & 45.7 & 52.9 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 63.8 & 58.8 & 60.2 & 53.8 & 55.1 & 38.1 & 44.9 & 51.8 \\
+& +Skel & - & 59.6 & 62.2 & 55.2 & 55.8 & 38.9 & 42.7 & 52.4 \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-72B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & - & 63.1 & 63.8 & 63.2 & 61.6 & 47.6 & 53.3 & 58.8 \\
+& +Skel & - & 65.8 & 63.8 & 62.4 & 63.4 & 49.0 & 55.5 & 60.0 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & - & 62.2 & 64.4 & 63.1 & 61.7 & 56.3 & 52.5 & 60.0 \\
+& +Skel & - & 64.2 & 64.0 & 61.1 & 62.5 & 56.6 & 55.1 & 60.6 \\
+\midrule
+\multicolumn{10}{c}{\textit{Llama-3.1-8B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 41.2 & 33.4 & 37.7 & 29.8 & 31.0 & 31.9 & 25.3 & 31.5 \\
+& +Skel & - & 33.4 & 35.6 & 34.0 & 32.0 & 34.2 & 24.4 & 32.3 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 41.2 & 33.8 & 41.6 & 29.7 & 33.3 & 32.5 & 26.3 & 32.9 \\
+& +Skel & - & 37.7 & 37.3 & 32.9 & 31.6 & 38.8 & 29.6 & 34.6 \\
+\midrule
+\multicolumn{10}{c}{\textit{Llama-3.1-70B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 54.2 & 50.1 & 50.1 & 49.0 & 51.0 & 48.6 & 43.2 & 48.7 \\
+& +Skel & - & 50.3 & 45.6 & 50.4 & 52.3 & 49.1 & 45.4 & 48.9 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 54.2 & 49.5 & 50.9 & 51.9 & 47.2 & 51.1 & 46.2 & 49.5 \\
+& +Skel & - & 51.1 & 50.9 & 51.2 & 49.0 & 48.2 & 45.6 & 49.3 \\
+\bottomrule
+\end{tabular}
+
+\end{table*}

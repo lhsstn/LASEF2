@@ -1,0 +1,21 @@
+\begin{table}[!h]
+\centering
+\small
+\begin{tabular}{llrr}
+\toprule
+Target & Skeleton & $\Delta$ (\%) & $p$ \\
+\midrule
+\multicolumn{4}{c}{\textit{Positive effects (Non-English skeleton $>$ English skeleton)}} \\
+mt & ru & $+8.62$ & 0.001 \\
+mt & th & $+6.90$ & 0.008 \\
+mt & es & $+6.61$ & 0.041 \\
+\midrule
+\multicolumn{4}{c}{\textit{Negative effects (English skeleton $>$ Non-English skeleton)}} \\
+ug & th & $-10.25$ & 0.002 \\
+mn & th & $-8.47$ & 0.016 \\
+kk & ko & $-7.66$ & 0.030 \\
+\bottomrule
+\end{tabular}
+\caption{Pairs that reached nominal significance in McNemar's test before correction for multiple comparisons ($p<0.05$). $\Delta$ denotes the accuracy difference between the non-English skeleton and the English skeleton.}
+\label{tab:mcnemar}
+\end{table}

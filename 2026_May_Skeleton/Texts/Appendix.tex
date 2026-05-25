@@ -1,0 +1,469 @@
+\appendix
+\section{Skeleton}\label{Appendix:about-skeleton}
+\subsection{Skeleton Generation Method}
+The skeleton generation pipeline proposed in this study is constructed as follows.
+
+\paragraph{Input Configuration}
+When generating a skeleton, the model is provided with the problem text together with three few-shot examples. These few-shot examples constrain the output style and abstraction level of the skeleton, ensuring that the skeleton is produced in the specified output language $\ell_s$. Meanwhile, the input question itself is presented in the target language $\ell_t$, and the model generates the skeleton based on this input.
+
+\paragraph{Two Components}
+Instead of directly presenting the computational steps or explicit reasoning procedures required to solve the problem, the skeleton is designed to abstract and represent the underlying structural elements and the conceptual problem-solving framework. The generated skeleton is organized into the following two core components:
+\begin{enumerate}
+    \item \textbf{Problem Structure}: Identifies and defines the \textbf{Objects}, \textbf{Variables}, \textbf{Relationships}, \textbf{Constraints}, and \textbf{Problem Nature} included in the problem.
+    \item \textbf{Key Concepts / Tools}: Describes the mathematical/scientific principles and tools essential for solving the problem using standardized academic terminology.
+\end{enumerate}
+
+\paragraph{Generation Constraints}
+To maintain the level of abstraction and consistency of the skeleton, the generation process is subject to the following constraints. First, the final answer or any specific numerical values are not mentioned explicitly, and the numbers or formulas appearing in the reasoning path are replaced with their conceptual roles (e.g., ``coefficient'', ``boundary value'', ``ratio''). Second, instead of computation-centered verbs such as ``calculate'' or ``compute'' the model is encouraged to use verbs that induce conceptual reasoning, such as ``identify'', ``express'', and ``relate''. Third, while the essential logical structure of the problem-solving process is preserved, peripheral procedural details, redundant descriptions, and errors contained in the reasoning path are excluded. Through these constraints, the skeleton is guided to extract the structural essence of the problem without directly presenting the solution method.
+
+\subsection{System Prompt for Skeleton Generation}
+\input{Tables/skeleton_system_prompt}
+
+The details of the System Prompt applied to the model for skeleton generation are presented in Table~\ref{tab:skeleton_system_prompt}. This prompt is designed to ensure that the model does not directly present the final answer or explicit solution procedures (How), but instead abstracts the structural characteristics and core concepts (What) of the problem to construct a conceptual problem-solving plan. The prompt used in the subsequent stage, where the model solves the problem based on the generated skeleton, is presented as follows.
+
+
+\begin{tcolorbox}[
+width=\columnwidth,
+  colback=gray!5,
+  colframe=black,
+  boxrule=0.6pt,
+  arc=6pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  title=Solver Prompt for Skeleton
+]
+\small\raggedright
+\textit{Question: [Problem Text]\\
+Reasoning Skeleton: [Generated Skeleton]\\
+\\
+Instructions:\\
+1. Follow the Reasoning Skeleton above.\\
+2. Verify numbers against the Question text.\\
+3. Let's think step-by-step. Respond in [Target Language].\\
+Final Answer Format: }
+
+\[
+\boxed{\text{answer}}
+\]
+
+\end{tcolorbox}
+
+\subsection{Few-shot Examples Used for Skeleton Reasoning}
+\label{sec:few-shots}
+% For skeleton-based reasoning evaluation, 3-shot examples tailored to each question language were used. Below are the English few-shot examples:
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Skeleton Few-shot Example 1~(Korean)
+]
+\small
+\textbf{Question:} 삼각형에 길이가 5cm와 12cm인 두 변이 있으며, 그 사이에 직각이 있습니다. 세 번째 변의 길이는 얼마입니까?~
+(A triangle has sides of length 5 cm and 12 cm, with a right angle between them. What is the length of the third side?)\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Geometric figure: right triangle with three sides\\
+- Known quantities: two perpendicular sides (5 cm, 12 cm), right angle constraint\\
+- Unknown: third side (hypotenuse) connecting the two legs\\
+- Relationship: side lengths satisfy distance relation enforced by right angle property\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Pythagorean theorem\\
+- Right triangle geometry
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Skeleton Few-shot Example 2~(Korean)
+]
+\small
+\textbf{Question:} 5명의 후보(Alice, Bob, Charlie, Dave, Eve) 중에서 2명의 위원을 선출해야 합니다. 그러나 Alice와 Bob은 함께 위원이 될 수 없습니다. 위원회를 구성하는 방법은 몇 가지입니까?~(A committee needs to pick 2 members from a group of 5 candidates. However, Alice and Bob cannot be on the committee together. How many ways can the committee be formed?)\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Discrete selection problem: choosing k=2 elements from n=5 candidates\\
+- Known: total candidates (5), committee size (2), pairwise exclusion constraint\\
+- Unknown: number of valid selection configurations\\
+- Constraint: pairwise exclusion (Alice and Bob cannot co-occur)\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Combinatorial counting (combinations)\\
+- Constraint satisfaction\\
+- Complementary counting
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Few-shot Example 3: Rate Problem
+]
+\small
+\textbf{Question:} 기계 A는 8시간 동안 시간당 100개를 생산합니다. 기계 B는 4시간 가동 후 1시간 휴식하고, 그 후 3시간 동안 시간당 120개를 생산합니다. 총 생산량은 얼마입니까?~(Machine A runs for 8 hours producing 100 units/hour. Machine B runs for 4 hours, rests for 1 hour, then runs for 3 hours at 120 units/hour. What is the total production?)\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Two independent production processes with different temporal patterns\\
+- Variables: production rates, time durations, total output\\
+- Machine A: single continuous active interval (8 hours @ 100 units/hour)\\
+- Machine B: two disjoint active intervals separated by idle period\\
+- Relationship: total output = sum of (rate $\times$ active duration) across all segments\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Rate-time-quantity relationships\\
+- Piecewise continuous processes\\
+- Linear aggregation
+\end{tcolorbox}
+
+For each target language (Korean, Spanish, Chinese, Thai, Swahili), we used few-shot examples where the questions were translated into the respective language, while the skeleton responses were generated in English in all cases.
+
+\subsection{Example of Skeleton Generation}
+
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=gray!60!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Example~(1): Skeleton Generation
+]
+\small
+\textbf{Question:} 한 자전거가 분당 20피트의 속도로 이동하고 있다. 이 자전거의 속도를 초당 인치로 표현하면 얼마인가?~(A bicycle is traveling at 20 feet per minute. What is the bicycle's speed expressed in inches per second?)\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Object: bicycle\\
+- Known: speed in feet per minute (20 ft/min)\\
+- Unknown: speed in inches per second\\
+- Relationships: conversion between units of length (feet to inches) and time (minutes to seconds)\\
+- Constraints: 1 foot = 12 inches, 1 minute = 60 seconds\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Unit conversion\\
+- Dimensional analysis
+\end{tcolorbox}
+
+
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=gray!60!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Example~(2): Skeleton Generation
+]
+\small
+\textbf{Question:} 6명의 마녀와 10명의 마법사가 비밀 모임에 참석하였다. 마녀들은 각 마법사와 악수를 하기로 결정했다. 마녀들끼리는 이미 모두 친한 친구이므로 서로 악수를 하지 않고, 마법사들끼리는 서로 싫어해서 악수를 하지 않았다. 이 모임에서 이루어진 총 악수의 수는 몇인가?~(Six witches and ten sorcerers are at an arcane mixer. The witches have decided to shake hands with each of the sorcerers. None of the witches bothered to shake each other's hands, since they are all good friends already, and the sorcerers all sort of hate each other and did not shake hands with other sorcerers. How many handshakes took place at the mixer?)\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Discrete interaction problem: handshakes between two distinct groups\\
+- Known: number of witches (6), number of wizards (10)\\
+- Unknown: total number of handshakes\\
+- Relationship: each witch shakes hands with each wizard exactly once\\
+- Constraints: no handshakes between witches, no handshakes between wizards\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Combinatorial counting (specifically, Cartesian product of two sets)\\
+- Bipartite graph theory (each handshake represents an edge between two disjoint sets)
+
+
+\end{tcolorbox}
+
+
+
+
+
+\section{Evaluation Setup}\label{Appendix:Evaluation-setup}
+
+\subsection{Chain-of-Thought Prompt}
+We adopt Chain-of-Thought~\citep{cot-neurips2022} as our baseline approach. The prompt is shown below.
+
+\begin{tcolorbox}[
+width=\columnwidth,
+  colback=gray!5,
+  colframe=black,
+  boxrule=0.6pt,
+  arc=6pt,
+  left=8pt,
+  right=8pt,
+  top=6pt,
+  bottom=6pt,
+  title=Prompt for CoT
+]
+\small\raggedright
+\textbf{System:}\\
+\textit{You are a math problem solver. Solve the given problem.\\
+\\
+At the end, clearly state the final answer in the following format:}
+\[
+\boxed{\text{final answer}}
+\]
+
+\vspace{3pt}
+\textbf{User:}\\
+\textit{Question: [Problem Text]\\
+\\
+Let's think step by step. Respond in [Target Language].}
+\end{tcolorbox}
+
+\subsection{Evaluation Protocol}\label{Appendix:Evaluation-protocol}
+
+\paragraph{Decoding Strategy}
+To minimize variability in the reasoning process across all experiments, Greedy Decoding was used. The temperature was set to 0, selecting the token with the highest probability at each generation step.
+
+\paragraph{Exact Match (EM) Evaluation}
+Quantitative evaluation was performed using the \texttt{math-verify} library~\citep{mathverify}. The Exact Match (EM) score was calculated based on whether the answer extracted in the `\verb|\boxed{}|' format from the model's final output matched the Ground Truth.
+
+\paragraph{Language Consistency Filtering}
+To ensure a fair comparison of reasoning capabilities, we included in the evaluation only those samples whose generated output language matched the target language. In particular, we filtered samples satisfying the condition $\ell_a = \ell_t$, thereby preventing evaluation bias that may arise from code-switching or unintended language mixing. Language identification for the generated responses was performed using the FastText classifier~\citep{fasttext}.
+
+In addition, to ensure a fair comparison between the baseline and the skeleton-based method(e.g., CoT-$\ell_t$ vs \textsc{+SKELETON}, evaluation was conducted only on samples that satisfied the condition $\ell_q = \ell_t$ in both settings. This filtering ensured that the reasoning performance was compared under identical input–output language conditions.
+
+\paragraph{Intersection-based Pairing.}
+For comparisons across skeleton languages in Sec.~\ref{sec:low-resource-nonen}, we adopt intersection-based pairing to ensure fair comparison. Specifically, each (target language, skeleton language) pair is compared against its English-skeleton counterpart only on the subset of items where both settings produce $\ell_a=\ell_t$. To ensure reliable analysis, we further require each target language to retain at least 180 valid samples on average across the five non-English skeleton languages (zh, es, ru, ko, th); target languages with fewer samples are excluded.
+
+\paragraph{Language Forcing}
+Following the approach proposed by \citet{reason-lang-emnlp2025}, we incorporate the instruction ``Respond in \{$l_t$\}'' along with language-specific trigger phrases. Specifically, we use triggers such as ``좋습니다,'' for Korean, ``Sawa,'' for Swahili, and ``Bien,'' for Spanish to encourage the model to initiate generation in the target language.
+
+\subsection{Mathematical Benchmarks}
+In this experiment, to comprehensively evaluate the mathematical reasoning capabilities of multilingual LLMs, we utilized three benchmarks with differing problem difficulties and linguistic characteristics.
+
+\paragraph{MGSM (Multilingual Grade School Math)}
+A multilingual benchmark built upon the 250-sample test set of GSM8K~\citep{cobbe2021training}~\citep{shi2022language}, consisting of elementary-level arithmetic problems. It is widely used as a standard metric for measuring basic arithmetic reasoning skills in multilingual environments. In addition to the existing 10 languages (Bengali, Chinese, English, French, German, Japanese, Russian, Spanish, Swahili, Thai), we expanded the evaluation scope to include Korean\footnote{\url{https://huggingface.co/datasets/freewheelin/mgsm_ko}} and various low-resource languages.
+
+\paragraph{MATH-500}
+A subset of 500 representative questions selected by topic and difficulty from the high-difficulty mathematics dataset MATH~\citep{hendrycks2measuring}. It covers advanced mathematical fields such as Algebra, Geometry, and Calculus, requiring complex mathematical thinking and problem-solving skills beyond simple calculations. Since MATH is originally an English-only benchmark, we utilized existing high-quality human translations\footnote{\url{https://huggingface.co/datasets/appier-ai-research/Multilingual-MATH-500}, \url{https://huggingface.co/datasets/davidkim205/ko-math-500}, \url{https://huggingface.co/datasets/iapp/math-500-th}} for our multilingual evaluation.
+
+\paragraph{PolyMath}
+A recently proposed high-difficulty multilingual math reasoning benchmark~\citep{wang2025polymath}, containing 500 complex problems (125 per difficulty level) across four difficulty levels in 18 languages. Composed of high-quality questions reflecting the cultural and linguistic contexts of each language region rather than simple translations, it is suitable for analyzing the deep multilingual reasoning limitations and performance gaps of LLMs.
+
+\subsection{Models}
+We selected \textsc{Qwen2.5} and \textsc{Llama 3.1}, the latest open-source model families with verified multilingual processing capabilities and reasoning performance.
+
+\paragraph{Qwen2.5}~\citep{qwen2025qwen25technicalreport}
+Developed by Alibaba Cloud, the \textsc{Qwen2.5} series has demonstrated exceptional performance, particularly in mathematical reasoning and coding. It offers various parameter sizes ranging from 0.5B to 72B and is pre-trained on a vast multilingual corpus, exhibiting strong performance even in non-English languages. In this study, we used the 7B, 14B, and 72B models to analyze the effect of skeletons according to model scale expansion.
+
+\paragraph{Llama 3.1}~\citep{grattafiori2024llama3herdmodels}
+As the successor to Meta's \textsc{Llama 3}, \textsc{Llama 3.1} features an extended context window of 128K tokens and enhanced multilingual support. To verify whether the skeleton-based methodology is effective in general-purpose LLMs not specialized for specific domains, we used the 8B and 70B models in our experiments.
+
+
+\section{Details of MGSM Low-Resource Dataset Construction}
+\label{appendix:mgsm-translation}
+
+This section details the construction process and rigorous quality control system of the \textbf{MGSM Low-Resource} benchmark newly established in this study. To expand the existing MGSM dataset to 34 low-resource languages, we introduced a Dual-Model Translation Pipeline applying prompt engineering and a multi-stage verification procedure.
+
+\subsection{Selection Criteria for Low-Resource Languages}
+Target languages were selected from ultra-low-resource languages that account for less than $0.05\%$ of the data within the large-scale corpus \texttt{allenai/c4}\footnote{\url{https://huggingface.co/datasets/allenai/c4}}. This was to identify languages that are not sufficiently included in the pre-training data of modern LLMs, leading to underestimated performance or lack of research.
+
+The 34 finally selected languages were chosen considering typological diversity, including various language families, writing systems, and geographical distributions. The detailed list is provided in Table~\ref{tab:target-languages}.
+
+\input{Tables/appendix_low_resource_list}
+
+\subsection{Dataset Construction Pipeline}
+The dataset construction adopted a dual-model pipeline utilizing Gemini~(\texttt{gemini-3.0-flash})~\citep{geminiteam2025geminifamilyhighlycapable} and GPT~(\texttt{gpt-5-mini})~\citep{openai2024gpt4technicalreport} in parallel to eliminate single-model dependency and maximize translation quality. The entire process consists of three stages: \textbf{Generation-Validation-Selection}.
+
+\subsubsection{Stage 1: Prompt-Based Generation and Numerical Consistency Check}
+\label{sec:pre-filtering}
+
+For each problem, two models independently generate translation candidates ($T$). To prevent distortion of mathematical symbols or unnecessary additions and ensure translation accuracy, we designed and applied a system prompt including a professional translator persona and four key constraints (numerical preservation, meaning retention, natural fluency, and output format compliance).
+
+The details of the prompt used are as follows:
+
+\begin{tcolorbox}[ colback=gray!5, colframe=black, boxrule=0.6pt, arc=6pt, left=8pt, right=8pt, top=6pt, bottom=6pt, title=Translation System Prompt ] 
+\small
+\textit{ "You are a professional translator. Translate the given text to [Target Language]. \\ Rules: \\ 1. Preserve all numbers, mathematical expressions, and proper nouns exactly as they appear \\ 2. Maintain the original meaning and context \\ 3. Use natural, fluent [Target Language] \\ 4. Only output the translation, nothing else" } 
+\end{tcolorbox}
+
+Particularly, to guarantee numerical accuracy, which is core information in math word problems, a \textbf{Numerical Preservation} check was performed immediately after generation. We calculated the recall of numerical entities between the source text ($E$) and the translated text ($T$), and if it fell below the threshold ($80\%$), the translation was immediately discarded, and the regeneration process was triggered.
+
+\begin{equation}
+    \text{Recall}_{\text{num}}(T, E) < 0.8 \implies \text{Regenerate}
+\end{equation}
+
+Through this strict filtering process, numerical errors were preemptively blocked, and only valid candidates adhering to prompt constraints were passed to the next stage.
+
+\subsubsection{Stage 2: Back-Translation Quality Selection (BTQS)}
+
+To select the optimal translation among the candidates ($T_{\text{gemini}}, T_{\text{gpt}}$) that passed the numerical check, we applied the Back-Translation Quality Selection (BTQS) methodology.
+
+\begin{enumerate}
+    \item \textbf{Back-Translation}: Each candidate translation is back-translated into English ($E'$) using the model used for its generation.
+    \item \textbf{Semantic Similarity Measurement}: To evaluate semantic equivalence between the source ($E$) and back-translated text ($E'$), cosine similarity is calculated using the \texttt{BAAI/bge-m3} encoder.
+    \begin{equation}
+        s(T) = \cos\big(\phi(E), \phi(E')\big)
+    \end{equation}
+    \item \textbf{Final Selection}: The translation with the higher similarity score is adopted as the final data.
+    \begin{equation}
+        T^* = \argmax_{T \in \{T_{\text{gemini}}, T_{\text{gpt}}\}} s(T)
+    \end{equation}
+\end{enumerate}
+
+\subsection{Quality Control and Verification Results}
+\label{subsec:quality_control}
+
+To confirm the reliability of the constructed dataset, we doubly verified linguistic accuracy and logical integrity based on the outputs of the BTQS pipeline.
+
+First, samples with BTQS similarity scores below the threshold ($0.8$) from the previous stage were considered defective and primarily excluded. Instead of simple exclusion, a \textbf{Regeneration} loop was immediately executed for these samples to iteratively correct them until all data met the quality standards.
+
+For the finally selected samples, \textbf{Round-trip Reasoning Validation} was performed to check the preservation of mathematical essence. To maximize efficiency, this was conducted by \textbf{reusing the back-translated text generated during the BTQS evaluation process} without additional translation. That is, English text generated via 34 target languages as pivots was input into the reasoning model (\textsc{Qwen2.5-7B}), and logical consistency was verified by evaluating whether the model correctly derived the answer.
+
+\input{Tables/appendix_translation_score}
+
+The experimental results in Table~\ref{tab:round-trip-acc} strongly support the utility of this verification pipeline. Data routed through many pivot languages, including Tamil (93.6\%), recorded reasoning accuracies comparable to or even exceeding the baseline (90.0\%). Even Kazakh, which showed relatively lower performance, maintained a decent accuracy of 89.2\%, suggesting that information and logical structures essential for problem-solving were robustly preserved without loss during the round-trip conversion to the target language.
+
+Of course, this round-trip reasoning accuracy does not perfectly guarantee the grammatical completeness of the target language text itself. The possibility that the high-performance reasoning model self-corrected minor noise in the back-translated text to derive the answer cannot be ruled out. However, in low-resource language environments where securing native evaluators is realistically difficult, this is judged to be the most effective and scalable proxy metric for determining logical information loss.
+
+Detailed statistics of the finally constructed dataset are shown in Table~\ref{tab:final-stats}. The dataset consists of a total of 8,500 high-quality samples, with final contributions by model being 62.1\% for Gemini and 37.9\% for GPT.
+
+\input{Tables/appendix_low_resource}
+
+\section{Linguistic Typology and Affinity/Alignment Classification}
+\label{app:typology}
+\input{Tables/typo_feature}
+
+To make the notions of \emph{surface affinity} and \emph{structural alignment} used in Sec.~\ref{sec:low-resource-nonen} precise and reproducible, we define them operationally as functions of language-level typological features, listed for all target and skeleton languages in Tab.~\ref{tab:typology}.
+
+\paragraph{Definitions.}
+For a target language $t$ and a skeleton language $s$:
+\begin{itemize}
+\item \textbf{Surface affinity} $\mathrm{Aff}(t,s){=}1$ iff $t$ and $s$ share at least one of: (i) genetic language family, (ii) writing script, or (iii) geographic macro-region; otherwise $0$.
+\item \textbf{Structural alignment} $\mathrm{Align}(t,s){=}1$ iff $t$ and $s$ share \emph{both} (i) dominant morphological type (analytic, agglutinative, or fusional) and (ii) basic constituent order (e.g., SOV vs.\ SVO); otherwise $0$.
+\end{itemize}
+These are \emph{descriptive} categories, not predictors. As shown in Sec.~\ref{sec:low-resource-nonen}, structural alignment does not guarantee positive transfer (e.g., Maltese is alignment-positive yet evaluation-sensitive), and surface affinity does not prevent negative transfer (e.g., ug--zh and mn--ru share affinity but are misaligned and transfer negatively). The classification removes ambiguity from our terminology rather than asserting a causal rule.
+
+\paragraph{Worked examples.}
+Under these definitions, lo--th is both affine (Kra--Dai family) and aligned (analytic, SVO); eu--ko is \emph{not} affine but is aligned (agglutinative, SOV); ug--zh and mn--ru are affine (geography or script) but \emph{not} aligned. This matches the patterns reported in Sec.~\ref{sec:low-resource-nonen}.
+
+\section{Computational Cost Analysis}
+\input{Figures/skeleton_token_count}
+\input{Figures/skeleton_vs_vanilla}
+
+Figure~\ref{fig:skeleton_tokens_vanila_sk}, \ref{fig:skeleton_vs_vanilla} presents the quantitative analysis of the change in computational cost due to the introduction of skeletons. The average length of the skeleton is highly concise, with an overall mean of 120.42 tokens. The average total token count (Skeleton + RS) is 1071.75, representing an increase of approximately 146.68 tokens compared to the vanilla baseline mean of 925.07. Notably, even in languages with high token consumption such as Swahili~(sw), which requires 1692.2 tokens for the full process, the relative overhead remains manageable. These results suggest that the skeleton efficiently guides the model's reasoning process, suppressing unnecessary elaboration or inefficient operations during generation.
+
+\section{Qualitative Analysis}
+\label{Appendix:skeleton_qualitative}
+\subsection{Quality Assessment of English Skeletons}
+\input{Figures/analysis_skeleton_llmjudge}
+Figure~\ref{fig:llmjudge} (Left) shows the change in skeleton generation quality according to model scale. A distinct trend of improved skeleton quality with larger model scale was observed; in particular, large-scale models of 70B or larger recorded a high quality score of 6.7 on average.
+
+Furthermore, the correlation analysis results in Figure~\ref{fig:llmjudge} (Right) shed light on the relationship between skeleton quality factors and final reasoning performance. `Coherence' ($r=0.82$) and `Completeness' ($r=0.74$) showed strong positive correlations with final performance, whereas `Specificity' ($r=0.40$) showed a relatively lower correlation. This implies that for successful reasoning in the target language, it is more important for the skeleton to include the logical flow of problem-solving and key elements without omission, rather than describing detailed steps specifically.
+
+
+\subsection{Cross-Lingual Skeleton Quality and the Quality--Performance Gap}
+\input{Figures/analysis_langpair}
+The translation ablation in Sec.~\ref{sec:analysis} controls skeleton \emph{content} to isolate surface form. Here we provide complementary evidence from the opposite direction: we score the \emph{intrinsic generation quality} of skeletons across languages using an LLM-as-a-Judge, and ask whether quality alone can explain the cross-lingual effects in Sec.~\ref{sec:low-resource-nonen}. We emphasize that this analysis is correlational and exploratory, intended to characterize rather than causally explain the observed patterns.
+
+\paragraph{English dominates intrinsic quality.}
+As shown in Fig.~\ref{fig:lang_pair_heatmap}, English attains the highest average skeleton-quality score ($7.57$), followed by Spanish ($7.35$), Chinese ($7.24$), and Russian ($7.13$), while Korean ($6.69$) and Thai ($5.65$) score lower. This is consistent with English serving as a stable default skeleton language for most targets (Sec.~\ref{sec:low-resource-nonen}).
+
+\paragraph{Quality does not track performance under structural alignment.}
+For several structurally aligned pairs, a \emph{lower}-quality skeleton nonetheless yields \emph{higher} performance. For Lao, the Thai skeleton scores $1.29$ points below English in quality ($6.48$ vs.\ $7.77$) yet improves accuracy by $+2.81$; for Basque, the Korean skeleton scores $1.19$ points below English ($6.18$ vs.\ $7.37$) yet improves accuracy by $+6.32$. A quality-only account would incorrectly predict English to be optimal here.
+
+\paragraph{No gap in the absence of structural alignment.}
+Conversely, where the target and skeleton share surface affinity but \emph{not} structural alignment, comparable quality coincides with negative transfer. For Uyghur, the Chinese skeleton has quality comparable to English ($7.40$ vs.\ $7.54$) but performance drops by $-6.45$; for Mongolian, the Russian skeleton even slightly exceeds English in quality ($7.22$ vs.\ $7.19$) yet performance drops by $-5.00$. Following the affinity/alignment distinction in Sec.~\ref{sec:low-resource-nonen}, these are precisely the pairs that share surface affinity (script or geography) but differ in morphological type and word order.
+
+\paragraph{Takeaway.}
+Together with the translation ablation (Sec.~\ref{sec:analysis}), this indicates that skeleton-language effects are not reducible to generation quality: structural alignment can compensate for lower intrinsic quality, whereas its absence is not offset by high quality. We regard this as supporting evidence for treating skeleton language as a design variable to be identified through exploration, and---consistent with our framing throughout---as an exploratory hypothesis rather than a causal claim.
+
+
+\subsection{Error Analysis: Impact of Skeleton}
+\input{Tables/error_analysis}
+To investigate the underlying causes of the performance changes observed in Table~\ref{tab:low-resource-mgsm}, we conducted an in-depth error analysis on the entire evaluation dataset using the LLM-as-a-Judge methodology. Table~\ref{tab:error_analysis} summarizes the frequency changes of the five key error types before and after applying the skeleton. The detailed evaluation protocol is described in Appendix~\ref{Appendix:Evaluation-protocol}.
+
+To qualitatively analyze the effectiveness of the skeleton, we constructed an automated error classification pipeline using the \texttt{gpt-5-mini} model. For each incorrect sample, the model response was provided as input, and the prompt was designed to identify the most decisive error type among the following five categories:
+
+\begin{enumerate}
+    \item \textbf{Problem Comprehension Error}: Misunderstanding the problem's goal, constraints, or key variables.
+    \item \textbf{Conceptual Error}: Incorrect application or omission of necessary formulas, theorems, or scientific principles.
+    \item \textbf{Reasoning Error}: Errors in logical flow or inclusion of incorrect reasoning steps.
+    \item \textbf{Calculation Error}: Mistakes in arithmetic or symbolic operations despite a correct approach.
+    \item \textbf{Output Generation Error}: Format errors (missing \verb|\boxed{}|), infinite repetition, language mismatch, etc.
+\end{enumerate}
+
+The evaluation model outputs the presence of each error type and a corresponding description in JSON format, which allowed for a quantitative comparative analysis of error patterns by language and condition.
+
+
+\paragraph{Skeletons as Cognitive Scaffolding}
+Analysis of language groups with significant performance improvement (kk, ug, mn, hy) confirmed that the introduction of skeletons significantly suppresses Reasoning Errors and Calculation Errors.
+In the case of Kazakh~(kk), which recorded the largest performance gain, Reasoning Errors decreased from 129 to 105 ($-18.6\%$) and Calculation Errors plummeted from 33 to 18 ($-45.5\%$) after applying the skeleton.
+This suggests that the English skeleton serves as \textit{cognitive scaffolding} that decomposes complex problems into manageable sub-units, effectively preventing the model from deviating from the logical path or committing simple arithmetic mistakes during the reasoning process.
+
+\paragraph{Semantic Interference Causing Comprehension Failure}
+Conversely, in language groups where performance improvement was marginal or declined (lo, eu, mt, ne), an increase in Problem Comprehension Errors acted as the main failure factor.
+For Lao~(lo), while the change in Reasoning Errors was minimal, Problem Comprehension Errors tended to increase from 115 to 133 ($+15.7\%$). This is interpreted as a phenomenon where the English skeleton distorted the core requirements of the original problem due to semantic interference between languages, or the model became overly biased towards the English instructions of the skeleton, missing the context of the original problem. Consequently, in these language groups, the skeleton appears to have caused the adverse effect of aggravating confusion from the problem understanding stage, rather than reducing cognitive load.
+
+\section{Llama 3.1 Experimental Results}\label{Appendix:Llama-results}
+\input{Tables/llama_results}
+
+While the main text presented experimental results centering on the \textsc{Qwen2.5} series, we performed the same experiments on the Meta \textsc{Llama 3.1} series (8B, 70B) to verify the generalizability of the methodology.
+
+Table~\ref{tab:llama-results} summarizes the results of the MGSM, MATH-500, and PolyMath benchmarks for the \textsc{Llama 3.1} model. The overall trends appeared similar to the \textsc{Qwen2.5} series:
+
+\begin{itemize}
+    \item \textbf{Improvement in Low-Resource Languages}: In the CoT-$en^{\dagger}$ setting of the \textsc{Llama-3.1-8B} model, a performance improvement from 32.5 to 38.8 ($+6.3$) was observed in MATH-500 for Swahili (sw) when skeletons were applied.
+    \item \textbf{Diminishing Returns with Scale}: In the \textsc{Llama-3.1-70B} model, the effect of skeletons was minimal, or performance degradation occurred in some languages (es: 88.0 $\rightarrow$ 81.5).
+    \item \textbf{Differences by Benchmark Difficulty}: The most consistent improvement effects appeared in MATH-500, while MGSM and PolyMath showed large variations by language.
+\end{itemize}
+
+These results align with the patterns observed in Qwen2.5, suggesting that the skeleton-based reasoning methodology is generally applicable and not limited to specific model architectures. However, since Llama 3.1 has a relatively lower proportion of multilingual data, the baseline performance in low-resource languages was measured lower than that of Qwen2.5. Particularly for Llama-3.1-70B, which already demonstrated high baseline performance in most conditions, the room for additional improvement by skeletons was limited.
+
+
+The evaluation model outputs the presence of each error type and a corresponding description in JSON format, which allowed for a quantitative comparative analysis of error patterns by language and condition.
+
+ \section{PolyMath Difficulty-Level Analysis}
+\label{app:polymath-difficulty}
+\input{Tables/polymath_difficulty}
+
+PolyMath is organized into four difficulty levels (Easy, Medium, High, Top; 125 problems each). To probe the effect of problem difficulty more directly than the full-set average, we restrict evaluation to the two hardest subsets (Top + High; 250 problems) and recompute the English-skeleton gain for the \textsc{Qwen2.5} family (7B, 14B, 72B), averaged over five languages (zh, es, ko, th, sw). Tab.~\ref{tab:polymath-difficulty} reports the results.
+
+Compared with the gains aggregated over all 500 problems, improvements on the harder subset generally shrink: for \textsc{Qwen2.5-7B} the average CoT-$\ell_t$ gain drops from $+1.20$ to $+0.16$, and for \textsc{Qwen2.5-72B} from $+0.90$ to $+0.70$. The mid-sized \textsc{Qwen2.5-14B} is an exception, showing a larger gain ($+1.78$) on the harder subset, suggesting that skeleton guidance can still aid mid-sized models on difficult problems. Overall, the tendency is consistent with our main finding that the benefit of skeletons diminishes as problem difficulty increases.
+
+\section{Statistical Significance Analysis}
+\label{app:stats}
+
+\input{Tables/stats_mcnemar}
+
+To assess the statistical reliability of the non-English skeleton effects discussed in Sec.~\ref{sec:low-resource-nonen}, we conducted McNemar's tests. McNemar's test compares paired binary outcomes over the same set of instances, focusing on the transition patterns between correct and incorrect predictions under two conditions. In our analysis, we tested whether item-level correctness differed significantly between the English skeleton and each non-English skeleton. Using the greedy decoding results of \textsc{Qwen2.5-7B}, we examined a total of 95 target--skeleton pairs, corresponding to 19 low-resource target languages and five non-English skeleton languages.
+
+\paragraph{Results.}
+Among the 95 pairs, six reached nominal significance before correction for multiple comparisons ($p<0.05$). These include both positive effects, where a non-English skeleton outperformed the English skeleton, and negative effects, where the English skeleton outperformed the non-English skeleton.
+
+The three positive effects were all observed for Maltese (mt), with mt--ru showing the strongest signal ($p=0.001$). In contrast, negative effects were observed for Uyghur--Thai, Mongolian--Thai, and Kazakh--Korean. These results indicate that non-English skeletons can also significantly degrade performance relative to English skeletons in some cases.
+
+The pairs discussed in the main text as stable cross-lingual effects, namely eu--ko ($p=0.072$), hy--ko ($p=0.361$), and lo--th ($p=0.401$), do not reach nominal significance under McNemar's test. We therefore do not interpret them as effects confirmed by a single statistical test. Instead, we treat them as consistency-based observations, since the direction of the effect remains stable across greedy decoding and multi-rollout evaluation. In other words, McNemar's test examines item-level correctness transitions under a single decoding setting, whereas our robustness analysis evaluates whether the direction of the effect is preserved across evaluation protocols.
+
+For Maltese, the positive effects are nominally significant under greedy decoding, but they are substantially attenuated or even reversed under multi-rollout evaluation. This is consistent with our interpretation in the main text that Maltese represents an evaluation-sensitive case rather than a stable cross-lingual transfer pattern.
+
+\section{Model Performance Across Other Low-Resource Languages}
+\subsection{Results on All Low-Resource Languages}
+\input{Tables/telugu}
+Table~\ref{tab:te-results} presents the performance changes when applying the skeleton to Telugu.
+
+\input{Figures/cross-lingual-figure34}
+\subsection{Results on All Low-Resource Languages}
+Although our experiments cover 34 languages in total, target-language CoT (\textsc{CoT-$\ell_t$}) fails to operate reliably for a subset of languages, making fair comparison difficult. We therefore focus our main analysis on 19 languages where target-language reasoning is stable. For completeness and transparency, results for all 34 languages are reported in Figure~\ref{fig:all-languages-heatmap}.

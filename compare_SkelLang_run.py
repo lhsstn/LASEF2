@@ -370,14 +370,27 @@ for skel_lang in SKELETON_LANGUAGES:
             print(f"   [{cot_lang}] No data")
             continue
         
-        min_len = min(len(baseline_lang_data), len(target_lang_data))
-        baseline_lang_data = baseline_lang_data[:min_len]
-        target_lang_data = target_lang_data[:min_len]
+        # Align baseline and target samples by unique question ID (original_id or global_id)
+        def get_item_id(item):
+            orig_id = item.get('original_id')
+            if orig_id is None:
+                orig_id = item.get('global_id')
+            return str(orig_id)
+            
+        dict_b = {get_item_id(item): item for item in target_lang_data}
+        
+        aligned_pairs = []
+        for item_a in baseline_lang_data:
+            key = get_item_id(item_a)
+            if key in dict_b:
+                aligned_pairs.append((item_a, dict_b[key]))
+                
+        total_len = len(aligned_pairs)
         
         filtered_pairs = []
         filtered_a, filtered_b, filtered_skel = 0, 0, 0
         
-        for item_a, item_b in zip(baseline_lang_data, target_lang_data):
+        for item_a, item_b in aligned_pairs:
             langs_a = item_a.get('detected_response_languages', [])
             langs_b = item_b.get('detected_response_languages', [])
             if cot_lang not in langs_a:
@@ -394,7 +407,7 @@ for skel_lang in SKELETON_LANGUAGES:
             
             filtered_pairs.append((item_a, item_b))
         
-        print(f"   [{cot_lang}] Total: {min_len}, A miss: {filtered_a}, B miss: {filtered_b}, Skel miss: {filtered_skel}, Valid: {len(filtered_pairs)}")
+        print(f"   [{cot_lang}] Total matched: {total_len}, A miss: {filtered_a}, B miss: {filtered_b}, Skel miss: {filtered_skel}, Valid: {len(filtered_pairs)}")
         
         if len(filtered_pairs) < 10:
             continue

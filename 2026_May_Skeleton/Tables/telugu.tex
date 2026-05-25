@@ -1,0 +1,48 @@
+\begin{table}[t]
+\centering
+\small
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{lccc}
+\toprule
+\textbf{Method} & \textbf{MATH-500 (te)} & \textbf{PolyMath (te)} & \textbf{MGSM (te)} \\
+\midrule
+\rowcolor{gray!10} \multicolumn{4}{c}{\textbf{Qwen2.5-7B-Instruct}} \\
+\midrule
+CoT-$\ell_t$ & 29.8 & 12.2 & 30.40 \\
+\textsc{+SKELETON} & 27.8 & 12.4 & 33.60 \\
+CoT-$en^{\dagger}$ & 35.7 & 17.3 & 60.40 \\
+\textsc{+SKELETON} & 33.9 & 17.7 & 54.00 \\
+\midrule
+\rowcolor{gray!10} \multicolumn{4}{c}{\textbf{Qwen2.5-14B-Instruct}} \\
+\midrule
+CoT-$\ell_t$ & 43.4 & 18.6 & 54.80 \\
+\textsc{+SKELETON} & 45.9 & 19.8 & 55.20 \\
+CoT-$en^{\dagger}$ & 45.1 & 24.2 & 71.89 \\
+\textsc{+SKELETON} & 43.0 & 22.2 & 73.90 \\
+\midrule
+\rowcolor{gray!10} \multicolumn{4}{c}{\textbf{Qwen2.5-72B-Instruct}} \\
+\midrule
+CoT-$\ell_t$ & 53.2 & 23.7 & 65.20 \\
+\textsc{+SKELETON} & 55.4 & 27.4 & 68.00 \\
+CoT-$en^{\dagger}$ & 52.4 & 28.2 & 78.40 \\
+\textsc{+SKELETON} & 55.2 & 28.8 & 82.80 \\
+\midrule
+\rowcolor{gray!10} \multicolumn{4}{c}{\textbf{Llama-3.1-8B-Instruct}} \\
+\midrule
+CoT-$\ell_t$ & 25.8 & 16.2 & 56.40 \\
+\textsc{+SKELETON} & 25.0 & 16.8 & 57.60 \\
+CoT-$en^{\dagger}$ & 26.7 & 17.3 & 63.60 \\
+\textsc{+SKELETON} & 30.1 & 17.3 & 62.80 \\
+\midrule
+\rowcolor{gray!10} \multicolumn{4}{c}{\textbf{Llama-3.1-70B-Instruct}} \\
+\midrule
+CoT-$\ell_t$ & 43.6 & 25.0 & 82.00 \\
+\textsc{+SKELETON} & 45.9 & 26.9 & 80.40 \\
+CoT-$en^{\dagger}$ & 46.7 & 26.0 & 83.20 \\
+\textsc{+SKELETON} & 46.1 & 27.3 & 82.80 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Telugu (te) Accuracy (\%) on MATH-500, PolyMath, and MGSM}
+\label{tab:te-results}
+\end{table}

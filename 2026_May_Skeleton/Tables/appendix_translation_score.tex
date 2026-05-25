@@ -1,0 +1,34 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3.5pt} % 컬럼 간격 미세 조정
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrr|lrr}
+\toprule
+\textbf{Target Lang} & \textbf{Acc (\%)} & \textbf{$\Delta$} & \textbf{Target Lang} & \textbf{Acc (\%)} & \textbf{$\Delta$} \\
+\midrule
+\textbf{English (Baseline)} & \textbf{90.00} & -- & Quechua (qu) & 89.60  & -0.40\\
+Tamil (ta) & 93.60 & +3.60 & Guarani (gn) & 90.00 & 0.00 \\
+Gujarati (gu) & 91.60 & +1.60 & Basque (eu) & 90.00 & 0.00 \\
+Kannada (kn) & 91.20 & +1.20 & Amharic (am) & 90.00 & 0.00 \\
+Khmer (km) & 91.20 & +1.20 & Javanese (jv) & 90.00 & 0.00 \\
+Sinhala (si) & 91.20 & +1.20 & Uyghur (ug) & 89.60 & -0.40 \\
+Uzbek (uz) & 91.20 & +1.20 & Tajik (tg) & 89.60 & -0.40 \\
+Yoruba (yo) & 90.80 & +0.80 & Sundanese (su) & 89.60 & -0.40 \\
+Kyrgyz (ky) & 90.80 & +0.80 & Burmese (my) & 89.60 & -0.40 \\
+Sindhi (sd) & 90.40 & +0.40 & Georgian (ka) & 89.60 & -0.40 \\
+Nepali (ne) & 90.40 & +0.40 & Pashto (ps) & 89.60 & -0.40 \\
+Punjabi (pa) & 90.40 & +0.40 & Armenian (hy) & 89.60 & -0.40 \\
+Maltese (mt) & 90.40 & +0.40 & Malayalam (ml) & 89.60 & -0.40 \\
+Lao (lo) & 90.40 & +0.40 & Malagasy (mg) & 89.60 & -0.40 \\
+Somali (so) & 90.00 & 0.00 & Mongolian (mn) & 89.20 & -0.80 \\
+Odia (or) & 90.00 & 0.00 & Kazakh (kk) & 89.20 & -0.80 \\
+Marathi (mr) & 90.00 & 0.00 & Kurdish (ku) & 89.20 & -0.80 \\
+Cebuano (ceb) & 90.00 & 0.00 &  &  &  \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Reasoning accuracy of Qwen2.5-7B on MGSM tasks using Round-trip Translation (English $\rightarrow$ Pivot $\rightarrow$ English). We used the target languages as pivots to validate the semantic consistency of the translated dataset. $\Delta$ denotes the performance difference relative to the English baseline.}
+\label{tab:round-trip-acc}
+\end{table}
+

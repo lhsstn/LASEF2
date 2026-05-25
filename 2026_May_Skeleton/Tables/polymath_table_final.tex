@@ -1,0 +1,49 @@
+% =========================
+% PolyMath Results (Accuracy %)
+% =========================
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.15}
+
+\caption{PolyMath Results: Accuracy (\%) by Method across Languages}
+\label{tab:polymath-method-language}
+
+\begin{tabular}{llcccccccc}
+\toprule
+\textbf{Method} & & \textbf{en} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{te} & \textbf{avg} \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-7B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 34.2 & 30.3 & 30.2 & 26.5 & 25.3 & 6.0 & 12.1 & 21.7 \\
+& +Skel & - & 30.1 & 31.2 & 28.2 & 26.5 & 6.9 & 12.3 & 22.5 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 34.2 & 29.5 & 31.7 & 27.7 & 29.0 & 16.8 & 17.2 & 25.3 \\
+& +Skel & - & 32.0 & 34.0 & 27.9 & 30.0 & 16.2 & 17.6 & 26.3 \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-14B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 36.8 & 31.4 & 36.6 & 31.2 & 29.9 & 16.1 & 18.6 & 27.3 \\
+& +Skel & - & 33.7 & 36.4 & 31.9 & 32.4 & 16.9 & 19.8 & 28.5 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 36.8 & 32.0 & 35.9 & 29.9 & 31.5 & 21.8 & 24.3 & 29.2 \\
+& +Skel & - & 33.2 & 34.8 & 32.0 & 31.5 & 24.3 & 22.3 & 29.7 \\
+\midrule
+\multicolumn{10}{c}{\textit{Qwen2.5-72B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 39.8 & 36.2 & 37.0 & 34.1 & 34.6 & 27.3 & 23.7 & 32.1 \\
+& +Skel & - & 36.4 & 37.7 & 36.6 & 34.9 & 28.7 & 27.2 & 33.6 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 39.8 & 34.5 & 35.6 & 34.6 & 35.4 & 28.6 & 28.2 & 32.8 \\
+& +Skel & - & 34.3 & 37.5 & 35.5 & 32.9 & 28.3 & 28.8 & 32.9 \\
+\midrule
+\multicolumn{10}{c}{\textit{Llama-3.1-8B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 25.8 & 21.9 & 22.7 & 23.9 & 18.5 & 23.4 & 15.9 & 21.1 \\
+& +Skel & - & 21.9 & 24.3 & 22.7 & 20.0 & 24.9 & 16.5 & 21.7 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 25.8 & 20.6 & 25.8 & 21.2 & 21.0 & 27.7 & 16.4 & 22.1 \\
+& +Skel & - & 24.0 & 26.5 & 23.5 & 21.8 & 28.9 & 16.7 & 23.6 \\
+\midrule
+\multicolumn{10}{c}{\textit{Llama-3.1-70B-Instruct}} \\
+\multirow{2}{*}{$M_{\text{CoT}}$} & Base & 32.6 & 29.2 & 28.1 & 30.8 & 28.5 & 33.1 & 24.5 & 29.0 \\
+& +Skel & - & 30.0 & 28.7 & 29.5 & 30.2 & 32.0 & 26.4 & 29.5 \\
+\multirow{2}{*}{$M_{\text{CoT}}^{\text{TQ}}$} & Base & 32.6 & 28.6 & 31.8 & 31.9 & 28.1 & 32.7 & 25.2 & 29.7 \\
+& +Skel & - & 28.4 & 28.9 & 31.2 & 27.3 & 33.4 & 26.5 & 29.3 \\
+\bottomrule
+\end{tabular}
+
+\end{table*}

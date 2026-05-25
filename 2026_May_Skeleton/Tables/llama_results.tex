@@ -1,0 +1,59 @@
+% =========================
+% Llama 3.1 Results Table for Appendix
+% =========================
+\begin{table*}[!t]
+\centering
+\footnotesize
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lcccccc|cccccc|cccccc}
+\toprule
+\multirow{2}{*}{\centering\textbf{Method}} & \multicolumn{6}{c}{\textbf{MGSM}} & \multicolumn{6}{c}{\textbf{MATH-500}} & \multicolumn{6}{c}{\textbf{PolyMath}} \\
+\cmidrule(lr){2-7} \cmidrule(lr){8-13} \cmidrule(lr){14-19}
+& \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{te} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{te} & \textbf{zh} & \textbf{es} & \textbf{ko} & \textbf{th} & \textbf{sw} & \textbf{te} \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{19}{c}{\textbf{\textit{Llama-3.1-8B-Instruct}}} \\
+\midrule
+\textsc{CoT}$(\ell_q=\text{target})$ &
+71.5 & 74.7 & 58.6 & 65.5 & 61.7 & 56.2 & 
+33.2 & 37.7 & 29.8 & 31.0 & 31.9 & 25.1 & 
+23.6 & 24.9 & 26.2 & 19.3 & 27.6 & 16.2 \\
++ \textsc{Skeleton}&
+68.3 & 75.5 & 61.0 & 65.1 & 63.8 & 57.4 & 
+34.7 & 35.6 & 34.0 & 32.0 & 34.2 & 25.9 &
+24.1 & 26.3 & 24.4 & 21.1 & 29.1 & 16.8 \\
+\textsc{CoT}$(\ell_q=\text{EN}^{\dagger})$ &
+69.3 & 78.3 & 64.9 & 69.1 & 68.3 & 63.9 & 
+33.8 & 41.6 & 29.7 & 33.3 & 32.5 & 26.3 & 
+22.4 & 27.6 & 24.4 & 21.6 & 32.4 & 17.3 \\
++ \textsc{Skeleton}&
+69.8 & 73.9 & 63.7 & 70.3 & 66.7 & 62.7 & 
+37.7 & 37.3 & 32.9 & 31.6 & 38.8 & 29.6 & 
+26.3 & 28.0 & 27.3 & 22.4 & 33.9 & 17.3 \\
+
+\midrule
+\rowcolor{gray!10} \multicolumn{19}{c}{\textbf{\textit{Llama-3.1-70B-Instruct}}} \\
+\midrule
+\textsc{CoT}$(\ell_q=\text{target})$ &
+86.3 & 88.0 & 83.9 & 86.8 & 83.9 & 81.9 &  
+50.1 & 50.1 & 49.0 & 51.0 & 48.6 & 43.2 & 
+29.8 & 28.6 & 32.2 & 29.1 & 35.0 & 25.0 \\
++ \textsc{Skeleton}&
+88.8 & 81.5 & 82.7 & 87.2 & 78.9 & 80.3 &
+50.3 & 45.6 & 50.4 & 52.3 & 49.1 & 45.4 & 
+30.7 & 29.2 & 31.2 & 30.4 & 33.8 & 26.9 \\
+\textsc{CoT}$(\ell_q=\text{EN}^{\dagger})$ & 
+85.5 & 88.4 & 84.7 & 85.1 & 83.3 & 83.1 & 
+49.5 & 50.9 & 51.9 & 47.2 & 51.1 & 46.2 & 
+29.4 & 32.9 & 32.9 & 28.7 & 36.3 & 26.0 \\
++ \textsc{Skeleton}& 
+85.9 & 82.3 & 83.9 & 82.7 & 82.5 & 82.7 & 
+51.1 & 50.9 & 51.2 & 49.0 & 48.2 & 45.6 & 
+29.2 & 29.7 & 31.7 & 28.3 & 36.3 & 27.3 \\
+\bottomrule
+\end{tabular}%
+}
+\caption{Multilingual mathematical reasoning results for the Llama 3.1 series (8B, 70B).
+The experiments use the MGSM, MATH-500, and PolyMath benchmarks. $\ell_q=\text{target}$ indicates that questions are presented in the target language, while $\ell_q=\text{EN}^{\dagger}$ denotes the use of English-translated questions. The skeleton language is fixed to English in all cases ($\ell_s=\text{EN}$).}
+\label{tab:llama-results}
+\end{table*}

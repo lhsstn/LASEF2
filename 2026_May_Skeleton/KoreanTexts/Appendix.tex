@@ -1,0 +1,292 @@
+\appendix
+
+% 들어가야할 것 
+% 1. 스켈레톤 생성 규칙과 추가 예제
+% 2. evaluation protocol 평가 방식
+% 3. error 분석 및 평가 방식
+% 4. skeleton 유무에 따른 오류 분석의 평가반식
+
+\section{Skeleton}\label{Appendix:about-skeleton}
+
+\subsection{스켈레톤 생성 방식}
+본 연구에서 제안하는 스켈레톤 생성 파이프라인은 다음과 같이 구성된다.
+
+\paragraph{입력 구성(Input Configuration)} 스켈레톤 생성 모델에 (1) 원본 질문(Question)과 (2) 정답 추론 경로(Reasoning Path)를 입력으로 제공한다. 이때 추론 경로는 모델의 논리적 전개 과정을 포함하되, 최종 정답(Final Answer) 이후의 텍스트는 제거하여 스켈레톤이 정답을 직접적으로 노출하지 않도록 한다.
+
+\paragraph{생성 목표(Generation Goal)} 모델은 제공된 추론 경로를 단순 요약하는 것이 아니라, 문제 해결을 위한 \textbf{개념적 계획(Conceptual Plan)}으로 추상화하여 재구성해야 한다. 생성된 스켈레톤은 다음 두 가지 핵심 섹션으로 엄격히 구조화된다:
+\begin{enumerate}
+    \item \textbf{Problem Structure}: 문제에 포함된 객체(Objects), 변수(Variables), 상호 관계(Relationships), 제약조건(Constraints) 및 문제 유형(Problem Nature)을 식별하여 정의한다.
+    \item \textbf{Key Concepts / Tools}: 문제 해결에 필수적인 수학적/과학적 원리와 도구를 표준화된 학술 용어로 기술한다.
+\end{enumerate}
+
+\paragraph{생성 제약조건(Constraints)} 스켈레톤의 추상화 수준과 일관성을 유지하기 위해 다음 규칙을 준수한다:
+\begin{itemize}
+    \item 최종 정답 및 구체적인 수치 값의 직접적인 언급을 배제한다.
+    \item 추론 경로 상의 수치나 수식은 구체적인 값 대신 그 개념적 역할(e.g., "coefficient", "boundary value")로 대체하여 기술한다.
+    \item "calculate", "compute"와 같은 연산 중심의 동사 대신 "identify", "express", "relate"와 같은 개념적 사고를 유도하는 동사를 사용한다.
+    \item 문제 해결의 본질적 논리는 보존하되, 지엽적인 세부 사항이나 추론 과정의 오류는 배제한다.
+\end{itemize}
+
+\subsection{스켈레톤 생성 System Prompt}
+
+스켈레톤 생성을 위해 모델에 적용된 시스템 프롬프트(System Prompt)의 상세 내용은 Table~\ref{tab:skeleton_system_prompt}와 같다. 해당 프롬프트는 모델이 정답이나 구체적인 풀이 과정(How)을 직접 제시하지 않고, 문제의 구조적 특징과 핵심 개념(What)만을 추출하여 추상화된 계획을 수립하도록 설계되었다.
+
+\input{Tables/skeleton_system_prompt}
+
+\subsection{스켈레톤 추론 시 사용한 퓨샷 예제}
+
+스켈레톤 기반 추론 평가 시, 각 질문 언어에 맞는 3-shot 예제를 사용하였다. 아래는 영어 퓨샷 예제이다:
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Few-shot Example 1: Geometry
+]
+\small
+\textbf{Question:} A triangle has sides of length 5 cm and 12 cm, with a right angle between them. What is the length of the third side?\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Geometric figure: right triangle with three sides\\
+- Known quantities: two perpendicular sides (5 cm, 12 cm), right angle constraint\\
+- Unknown: third side (hypotenuse) connecting the two legs\\
+- Relationship: side lengths satisfy distance relation enforced by right angle property\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Pythagorean theorem\\
+- Right triangle geometry
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Few-shot Example 2: Combinatorics
+]
+\small
+\textbf{Question:} A committee needs to pick 2 members from a group of 5 candidates. However, Alice and Bob cannot be on the committee together. How many ways can the committee be formed?\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Discrete selection problem: choosing k=2 elements from n=5 candidates\\
+- Known: total candidates (5), committee size (2), pairwise exclusion constraint\\
+- Unknown: number of valid selection configurations\\
+- Constraint: pairwise exclusion (Alice and Bob cannot co-occur)\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Combinatorial counting (combinations)\\
+- Constraint satisfaction\\
+- Complementary counting
+\end{tcolorbox}
+
+\begin{tcolorbox}[
+  colback=blue!3,
+  colframe=blue!50!black,
+  boxrule=0.5pt,
+  arc=4pt,
+  left=6pt,
+  right=6pt,
+  top=4pt,
+  bottom=4pt,
+  title=Few-shot Example 3: Rate Problem
+]
+\small
+\textbf{Question:} Machine A runs for 8 hours producing 100 units/hour. Machine B runs for 4 hours, rests for 1 hour, then runs for 3 hours at 120 units/hour. What is the total production?\\[0.5em]
+
+\textbf{Skeleton:}\\
+\textbf{Problem Structure}\\
+- Two independent production processes with different temporal patterns\\
+- Variables: production rates, time durations, total output\\
+- Machine A: single continuous active interval (8 hours @ 100 units/hour)\\
+- Machine B: two disjoint active intervals separated by idle period\\
+- Relationship: total output = sum of (rate $\times$ active duration) across all segments\\[0.3em]
+\textbf{Key Concepts / Tools}\\
+- Rate-time-quantity relationships\\
+- Piecewise continuous processes\\
+- Linear aggregation
+\end{tcolorbox}
+
+각 타겟 언어(한국어, 스페인어, 중국어, 태국어, 스와힐리어, 텔루구어)에 대해 동일한 문제를 해당 언어로 번역한 퓨샷 예제를 사용하였으며, 스켈레톤 응답은 모든 경우에서 영어로 생성되도록 하였다.
+
+
+\section{Evaluation Setup}\label{Appendix:Evaluation-setup}
+
+\subsection{Evaluation Protocol}\label{Appendix:Evaluation-protocol}
+
+\paragraph{Decoding Strategy}
+모든 실험에서 추론 과정의 변동성을 최소화하기 위해 Greedy Decoding을 사용하였다. 이는 온도(Temperature)를 0으로 설정하여, 각 생성 단계에서 가장 높은 확률을 가진 토큰을 선택하는 방식이다.
+
+\paragraph{Exact Match (EM) 평가}
+정량적 평가는 \texttt{math-verify} 라이브러리~\citep{mathverify}를 활용하여 수행하였다. 모델의 최종 출력에서 \verb|\boxed{}| 형식으로 추출된 정답과 Ground Truth의 일치 여부를 기준으로 Exact Match(EM) 점수를 산출하였다.
+
+\paragraph{언어 일관성 필터링}
+공정한 추론 능력 비교를 위해, 출력 언어가 타겟 언어와 일치하는 샘플만을 평가에 포함하였다. 구체적으로, $\ell_a = \ell_t$ 조건을 충족하는 샘플만을 선별함으로써, 코드 스위칭(Code-Switching)이나 언어 혼합으로 인한 평가 왜곡을 방지하였다.
+
+\paragraph{LLM-as-a-Judge 기반 오류 분석}
+\label{sec:llm-as-a-judge}
+스켈레톤의 효과를 정성적으로 분석하기 위해, GPT-5-mini 모델을 활용한 자동화된 오류 분류 파이프라인을 구축하였다. 각 오답 샘플에 대해 모델 응답을 입력으로 제공하고, 다음 5가지 오류 범주 중 가장 결정적인 오류 유형을 식별하도록 프롬프트를 설계하였다:
+
+\begin{enumerate}
+    \item \textbf{Problem Comprehension Error}: 문제의 목표, 제약조건, 핵심 변수를 잘못 이해한 경우
+    \item \textbf{Conceptual Error}: 필요한 공식, 정리, 과학적 원리를 잘못 적용하거나 누락한 경우
+    \item \textbf{Reasoning Error}: 논리적 흐름에 오류가 있거나 잘못된 추론 단계를 포함한 경우
+    \item \textbf{Calculation Error}: 올바른 접근법에도 불구하고 산술 또는 기호 연산에서 실수가 발생한 경우
+    \item \textbf{Output Generation Error}: 형식 오류(\verb|\boxed{}| 누락), 무한 반복, 언어 불일치 등
+\end{enumerate}
+
+평가 모델은 각 오류 유형의 존재 여부와 해당 설명을 JSON 형식으로 출력하며, 이를 통해 언어별/조건별 오류 패턴을 정량적으로 비교 분석하였다.
+
+% low resource mgsm 벤치마크 구축
+% 언어개수 수정 필요
+
+\subsection{Mathematical Benchmarks}
+본 실험에서는 다국어 LLM의 수학적 추론 능력을 종합적으로 평가하기 위해, 문제 난이도와 언어적 특성이 상이한 세 가지 벤치마크를 활용하였다.
+
+\paragraph{MGSM (Multilingual Grade School Math)}
+GSM8K~\citep{cobbe2021training}의 250개 테스트셋을 기반으로 구축된 다국어 벤치마크로~\citep{shi2022language}, 초등학교 수준의 산술 문제로 구성된다. 이는 다국어 환경에서 모델의 기초적인 산술 추론 능력을 측정하는 표준 지표로 널리 활용된다. 기존 10개 언어(Bengali, Chinese, English, French, German, Japanese, Russian, Spanish, Swahili, Thai)에 더해, 본 연구에서는 한국어 및 다양한 저자원 언어를 포함하여 평가 범위를 확장하였다.
+
+\paragraph{MATH-500}
+고난이도 수학 데이터셋인 MATH~\citep{hendrycks2measuring}에서 각 주제별/난이도별 대표 문항 500개를 엄선한 서브셋이다. 대수학(Algebra), 기하학(Geometry), 미적분학(Calculus) 등 심화 수학 분야를 포괄하며, 단순 계산을 넘어선 복합적인 수학적 사고력과 문제 해결 능력을 요구한다.
+
+\paragraph{PolyMath}
+최근 제안된 고난이도 다국어 수학 추론 벤치마크로~\citep{wang2025polymath}, 18개 언어에 걸쳐 4단계 난이도로 구성된 복잡한 문제들을 포함한다. 단순 번역된 문제가 아닌, 각 언어권의 문화적·언어적 맥락이 반영된 고품질 문항으로 구성되어 있어, LLM의 심층적인 다국어 추론 한계와 언어 간 성능 격차를 분석하는 데 적합하다.
+
+\subsection{Models}
+실험에는 다국어 처리 능력과 추론 성능이 검증된 최신 오픈 소스 모델군인 Qwen2.5와 Llama 3.1을 선정하였다.
+
+\paragraph{Qwen2.5}
+Alibaba Cloud가 개발한 Qwen2.5 시리즈는 특히 수학적 추론과 코딩 영역에서 탁월한 성능을 입증하였다. 0.5B부터 72B에 이르는 다양한 파라미터 규모를 제공하며, 방대한 다국어 코퍼스로 사전 학습되어 영어가 아닌 언어에서도 강력한 성능을 발휘한다. 본 연구에서는 7B, 14B, 72B 모델을 활용하여 모델 규모 확장에 따른 스켈레톤의 효과를 분석하였다.
+
+\paragraph{Llama 3.1}
+Meta의 Llama 3의 후속 모델인 Llama 3.1은 128K 토큰의 확장된 컨텍스트 윈도우와 강화된 다국어 지원 능력을 특징으로 한다. 범용적인 추론 능력이 뛰어난 이 모델을 통해, 특정 도메인에 특화되지 않은 일반 목적 LLM에서도 스켈레톤 기반 방법론이 유효한지 검증하기 위해 8B와 70B 모델을 실험에 사용하였다.
+
+
+\section{MGSM-LowResource 데이터셋 구축 세부 사항}
+\label{appendix:mgsm-translation}
+
+본 섹션에서는 본 연구에서 새롭게 구축한 \textbf{MGSM-LowResource} 벤치마크의 구축 과정과 엄격한 품질 관리 체계를 상세히 기술한다. 우리는 기존 MGSM 데이터셋을 34개의 저자원 언어로 확장하기 위해, 프롬프트 엔지니어링이 적용된 이중 모델 번역 파이프라인(Dual-Model Translation Pipeline)과 다단계 검증 절차를 도입하였다.
+
+\subsection{저자원 언어 선정 기준}
+대상 언어는 대규모 코퍼스인 \texttt{allenai/c4}\footnote{https://huggingface.co/datasets/allenai/c4} 내 데이터 비중이 $0.05\%$ 미만인 극저자원 언어(ultra-low-resource languages) 중에서 선정되었다. 이는 최신 LLM의 사전 학습 데이터에 충분히 포함되지 않아 실제 성능이 과소평가되거나 연구가 부족한 언어들을 식별하기 위함이다. 
+
+최종 선정된 34개 언어는 유형학적 다양성(typological diversity)을 확보하기 위해 다양한 어족, 문자 체계, 지리적 분포를 고려하여 구성되었으며, 그 상세 목록은 Table~\ref{tab:target-languages}과 같다.
+
+\input{Tables/appendix_low_resource_list}
+
+\subsection{데이터셋 구축 파이프라인}
+데이터셋 구축은 단일 모델 의존성을 탈피하고 번역 품질을 극대화하기 위해 Gemini(\texttt{gemini-3.0-flash})와 GPT(\texttt{gpt-5-mini})를 병렬로 활용하는 이중 모델 파이프라인을 채택하였다. 전체 공정은 \textbf{생성(Generation)-검증(Validation)-선택(Selection)}의 3단계로 구성된다.
+
+\subsubsection{1단계: 프롬프트 기반 생성 및 수치 정합성 검사}
+\label{sec:pre-filtering}
+
+각 문제에 대해 두 모델이 독립적으로 번역 후보($T$)를 생성한다. 수학적 기호의 변형이나 불필요한 첨언을 방지하고 번역의 정확성을 담보하기 위해, 전문 번역가 페르소나와 4가지 핵심 제약 조건(수치 보존, 의미 유지, 자연스러운 구사, 출력 형식 준수)을 포함한 시스템 프롬프트를 설계하여 적용하였다.
+
+사용된 프롬프트의 상세 내용은 다음과 같다:
+
+\begin{tcolorbox}[ colback=gray!5, colframe=black, boxrule=0.6pt, arc=6pt, left=8pt, right=8pt, top=6pt, bottom=6pt, title=Translation System Prompt ] 
+\small
+\textit{ "You are a professional translator. Translate the given text to [Target Language]. \\ Rules: \\ 1. Preserve all numbers, mathematical expressions, and proper nouns exactly as they appear \\ 2. Maintain the original meaning and context \\ 3. Use natural, fluent [Target Language] \\ 4. Only output the translation, nothing else" } 
+\end{tcolorbox}
+
+특히 수학 문장제 문제의 핵심 정보인 수치 정확성을 보장하기 위해, 생성 직후 \textbf{수치 보존(Numerical Preservation)} 검사를 수행하였다. 원문($E$)과 번역문($T$) 간의 수치 엔티티 재현율(Recall)을 계산하여, 기준치($80\%$)에 미달하는 경우 해당 번역을 즉시 폐기하고 재생성 프로세스를 가동하였다.
+
+\begin{equation}
+    \text{Recall}_{\text{num}}(T, E) < 0.8 \implies \text{Regenerate}
+\end{equation}
+
+이 엄격한 필터링 과정을 통해 수치적 오류를 사전에 차단하고 프롬프트 제약 조건을 준수한 유효 후보군만이 다음 단계로 이관되었다.
+
+\subsubsection{2단계: 역번역 기반 품질 선택 (BTQS)}
+
+수치 검사를 통과한 두 모델의 후보군($T_{\text{gemini}}, T_{\text{gpt}}$) 중 최적의 번역안을 선정하기 위해 역번역 품질 선택(Back-Translation Quality Selection, BTQS) 방법론을 적용하였다.
+
+\begin{enumerate}
+    \item \textbf{역번역(Back-Translation)}: 각 후보 번역문을 생성 시 사용된 모델을 이용해 다시 영어로 역번역($E'$)한다.
+    \item \textbf{의미 유사도 측정(Semantic Similarity)}: 원문($E$)과 역번역문($E'$) 간의 의미적 등가성을 평가하기 위해, \texttt{BAAI/bge-m3} 인코더를 활용하여 코사인 유사도를 산출한다.
+    \begin{equation}
+        s(T) = \cos\big(\phi(E), \phi(E')\big)
+    \end{equation}
+    \item \textbf{최종 선택(Final Selection)}: 두 후보 중 더 높은 유사도 점수를 획득한 번역문을 최종 데이터로 채택한다.
+    \begin{equation}
+        T^* = \argmax_{T \in \{T_{\text{gemini}}, T_{\text{gpt}}\}} s(T)
+    \end{equation}
+\end{enumerate}
+
+\subsection{품질 관리 및 검증 결과}
+\label{subsec:quality_control}
+
+구축된 데이터셋의 신뢰도를 확증하기 위해, BTQS 파이프라인의 산출물을 기반으로 언어적 정확성과 논리적 무결성을 이중으로 검증하였다.
+
+우선, 앞선 단계에서 산출된 BTQS 유사도 점수가 기준치($0.8$)에 미달하는 샘플들은 불량으로 간주하여 일차적으로 제외하였다. 단순히 제외하는 데 그치지 않고, 해당 샘플들에 대해서는 즉시 \textbf{재번역(Regeneration)} 루프를 실행하여 모든 데이터가 품질 기준을 충족하도록 반복 보정하였다.
+
+최종 선별된 샘플들에 대해서는 수학적 본질의 보존 여부를 확인하기 위한 \textbf{왕복 추론 검증(Round-trip Reasoning Validation)}을 수행하였다. 이는 효율성을 극대화하기 위해 별도의 추가 번역 없이, \textbf{BTQS 평가 과정에서 생성된 역번역 텍스트를 재활용}하여 진행되었다. 즉, 34개 타겟 언어를 피벗(Pivot)으로 경유하여 생성된 영어 텍스트를 추론 모델(Qwen2.5-7B)에 입력하고, 모델이 정답을 정확히 도출해내는지 평가함으로써 데이터의 논리적 일관성을 검증하였다.
+
+\input{Tables/appendix_translation_score}
+
+Table~\ref{tab:round-trip-acc}의 실험 결과는 본 검증 파이프라인의 효용성을 강력히 뒷받침한다. 타밀어(Tamil, 93.6\%)를 포함한 다수의 피벗 언어 경유 데이터가 원문(Baseline, 90.0\%)과 대등하거나 오히려 상회하는 추론 정확도를 기록하였다. 상대적으로 낮은 성능을 보인 카자흐어(Kazakh)조차 89.2\%의 준수한 정확도를 유지한 점은, 타겟 언어로의 왕복 변환 과정에서도 문제 해결에 필수적인 정보와 논리 구조가 손실 없이 견고하게 보존되었음을 시사한다.
+
+물론, 이러한 왕복 추론 정확도가 타겟 언어 텍스트 자체의 문법적 완결성을 완벽히 보증하는 것은 아니다. 고성능 추론 모델이 역번역 텍스트의 미세한 노이즈를 스스로 보정하여 정답을 도출했을 가능성이 배제될 수 없기 때문이다. 그러나 원어민 평가자를 확보하기 현실적으로 어려운 저자원 언어 환경에서, 데이터의 논리적 정보 손실(Information Loss) 여부를 판별하는 데 있어 이는 가장 효과적이고 확장 가능한 대리 지표(Proxy Metric)로 판단된다.
+
+최종 구축된 데이터셋의 상세 통계는 Table~\ref{tab:final-stats}와 같다. 데이터셋은 총 8,500개의 고품질 샘플로 구성되었으며, 모델별 최종 기여도는 Gemini가 62.1\%, GPT가 37.9\%를 차지하였다.
+
+\input{Tables/appendix_low_resource}
+
+
+\section{Computational Cost Analysis}
+\input{Tables/tokens_polymath}
+% \input{Figures/skeleton_token_count}
+% \input{Figures/skeleton_vs_vanilla}
+
+Table~\ref{tab:lang-stats}은 스켈레톤 도입에 따른 연산 비용의 변화를 정량적으로 분석한 결과를 보여준다.
+영어 스켈레톤의 평균 길이는 120.4 토큰으로 매우 간결하게 구성되어 있으며, 이를 포함한 전체 추론 과정의 토큰 증가량은 평균 146.7 토큰(기존 대비 약 $15.8\%$)에 불과하였다.
+특히, 스와힐리어(Swahili)와 같이 토큰 소모가 큰 언어(평균 1654.4 토큰)에서도 스켈레톤 도입으로 인한 증분은 37.8 토큰에 그쳤다. 이는 스켈레톤이 모델의 추론 경로를 효율적으로 구조화하여, 생성 과정에서의 불필요한 부연이나 비효율적인 연산을 억제하는 효과가 있음을 시사한다.
+
+
+\section{Qualitative Analysis}
+\label{Appendix:skeleton_qualtiative}
+\subsection{Quality Assessment of English Skeletons}
+\input{Figures/analysis_skeleton_llmjudge}
+Figure~\ref{fig:llmjudge} (Left)는 모델 규모에 따른 스켈레톤 생성 품질의 변화를 나타낸다. 모델의 규모가 커질수록 생성된 스켈레톤의 품질이 향상되는 경향이 뚜렷하게 관찰되었으며, 특히 70B 이상의 대규모 모델은 평균 6.7점의 높은 품질 점수를 기록하였다. 
+
+또한, Figure~\ref{fig:llmjudge} (Right)의 상관분석 결과는 스켈레톤의 품질 요소와 최종 추론 성능 간의 관계를 조명한다. `논리적 일관성(Coherence)'($r=0.82$)과 `완결성(Completeness)'($r=0.74$)은 최종 성능과 강한 양의 상관관계를 보인 반면, `구체성(Specificity)'($r=0.40$)은 상대적으로 낮은 상관관계를 보였다. 이는 타겟 언어에서의 성공적인 추론을 위해서는 스켈레톤이 세부적인 단계까지 구체적으로 서술하는 것보다, 전체적인 문제 해결의 논리적 흐름과 핵심 요소를 빠짐없이 포함하는 것이 더욱 중요함을 시사한다.
+
+
+\input{Tables/error_analysis}
+\subsection{Error Analysis: Impact of Skeleton}
+Table~\ref{tab:low-resource-mgsm}에서 관찰된 성능 변화의 기저 원인을 규명하기 위해, LLM-as-a-Judge 방법론을 활용하여 전체 평가 데이터셋에 대한 심층 오류 분석을 수행하였다. Table~\ref{tab:error_analysis}은 스켈레톤 적용 전후의 5가지 핵심 오류 유형 빈도 변화를 요약한다. 상세한 평가 프로토콜은 Appendix~\ref{Appendix:Evaluation-protocol}에 기술되어 있다.
+
+\paragraph{Skeletons as Cognitive Scaffolding}
+성능 향상이 두드러진 언어군(\textsc{kk, ug, mn, hy})에 대한 분석 결과, 스켈레톤의 도입이 추론 오류(Reasoning Error)와 연산 오류(Calculation Error)를 유의미하게 억제함을 확인하였다.
+가장 큰 폭의 성능 향상을 기록한 \textsc{Kazakh (kk)}의 경우, 스켈레톤 적용 후 Reasoning Error는 129회에서 105회($-18.6\%$)로, Calculation Error는 33회에서 18회($-45.5\%$)로 급감하였다.
+이는 영어 스켈레톤이 복잡한 문제를 처리 가능한 하위 단위로 분해하는 \textit{인지적 비계(Cognitive Scaffolding)} 역할을 수행함으로써, 모델이 추론 과정에서 논리적 경로를 이탈하거나 단순 연산 실수를 범하는 것을 효과적으로 방지하였음을 시사한다.
+
+\paragraph{Semantic Interference Causing Comprehension Failure}
+반면, 성능 개선이 미미하거나 하락한 언어군(\textsc{lo, eu, mt, ne})에서는 문제 이해 오류(Problem Comprehension Error)의 증가가 주요 실패 요인으로 작용하였다.
+\textsc{Lao (lo)}의 경우, Reasoning Error의 변화는 미미했으나, Problem Comprehension Error가 115회에서 133회($+15.7\%$)로 증가하는 경향을 보였다. 이는 언어 간 의미적 간섭(Semantic Interference)으로 인해 영어 스켈레톤이 원본 문제의 핵심 요구사항을 왜곡하거나, 모델이 스켈레톤의 영문 지시사항에 과도하게 편향되어 원본 문제의 맥락을 놓치는 현상이 발생했기 때문으로 해석된다. 결과적으로 이러한 언어군에서는 스켈레톤이 인지 부하를 줄여주기보다, 문제 이해 단계에서부터 혼란을 가중시키는 역효과를 초래한 것으로 분석된다.
+
+
+\section{Llama 3.1 실험 결과}\label{Appendix:Llama-results}
+
+본문에서는 Qwen2.5 시리즈를 중심으로 실험 결과를 제시하였으나, 방법론의 일반화 가능성을 검증하기 위해 Meta의 Llama 3.1 시리즈(8B, 70B)에 대해서도 동일한 실험을 수행하였다.
+
+Table~\ref{tab:llama-results}는 Llama 3.1 모델에 대한 MGSM, MATH-500, PolyMath 벤치마크 결과를 요약한다. 전반적인 경향성은 Qwen2.5 시리즈와 유사하게 나타났다:
+
+\begin{itemize}
+    \item \textbf{저자원 언어에서의 개선}: Llama-3.1-8B 모델의 CoT-$en^{\dagger}$ 설정에서 Swahili(sw)에 대해 스켈레톤 적용 시 MATH-500에서 32.5 → 38.8 ($+6.3$)의 성능 향상이 관찰되었다.
+    \item \textbf{규모 확장에 따른 효과 감소}: Llama-3.1-70B 모델에서는 스켈레톤의 효과가 미미하거나, 일부 언어(es: 88.0 → 81.5)에서 오히려 성능 저하가 발생하였다.
+    \item \textbf{벤치마크 난이도별 차이}: MATH-500에서 가장 일관된 개선 효과가 나타났으며, MGSM과 PolyMath에서는 언어별 편차가 컸다.
+\end{itemize}
+
+이러한 결과는 Qwen2.5에서 관찰된 패턴과 일치하며, 스켈레톤 기반 추론 방법론이 특정 모델 아키텍처에 국한되지 않고 일반적으로 적용 가능함을 시사한다. 다만, Llama 3.1의 경우 다국어 데이터 비중이 상대적으로 낮아, 저자원 언어에서의 기본 성능(Baseline)이 Qwen2.5보다 낮게 측정되었다. 특히 Llama-3.1-70B의 경우, 대부분의 조건에서 이미 높은 베이스라인 성능을 보여 스켈레톤의 추가적인 개선 여지가 제한적이었다.
+
+\input{Tables/llama_results}
+

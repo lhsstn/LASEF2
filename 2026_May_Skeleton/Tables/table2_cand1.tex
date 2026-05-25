@@ -1,0 +1,21 @@
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{6pt} % 열 간격(필요시 4~6pt 정도로 조절)
+\begin{tabular}{lccc}
+\toprule
+\multirow{2}{*}{\textbf{Language}} & \multicolumn{2}{c}{\textbf{Method}} & \multirow{2}{*}{$\boldsymbol{\Delta}$} \\
+\cmidrule(lr){2-3}
+ & \textsc{CoT} & + \textsc{Skeleton} \\
+\midrule
+Low1        & 80.1 & 79.8 & \textcolor{red}{+0.8} \\
+Low2        & 81.0 & 80.6 & \textcolor{blue}{-0.8} \\
+Low3        & 82.3 & 81.9 & \\
+Low4        & 82.9 & 82.4 & \\
+Low5        & 84.2 & 83.7 & \\
+
+\bottomrule
+\end{tabular}
+\caption{Results on a benchmark dataset.}
+\label{tab:acl_onecol_example}
+\end{table}

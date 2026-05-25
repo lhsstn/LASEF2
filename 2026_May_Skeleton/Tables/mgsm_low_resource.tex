@@ -1,0 +1,43 @@
+\begin{table}[!t]
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{lrrrr}
+\toprule
+\multirow{2}{*}{\textbf{Language}} &
+\multicolumn{2}{c}{\textbf{$\ell_t,en,\ell_t$}} &
+\multicolumn{2}{c}{\textbf{$en^{\dagger},en,\ell_t$}}\\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+ & \textsc{CoT-$l_t$} & +\textsc{Skeleton} & \textsc{CoT-$en^{\dagger}$} & +\textsc{Skeleton} \\
+\midrule
+\rowcolor{gray!10}\multicolumn{5}{c}{\textbf{\textit{Qwen2.5-7B-Instruct}}}\\
+\midrule
+kk & 40.08 & 51.42 (\textcolor{red}{+11.34}) & 62.82 & 72.22 (\textcolor{red}{+9.40}) \\
+ky & 33.33 & 37.86 (\textcolor{red}{+4.53}) & 61.92 & 65.69 (\textcolor{red}{+3.77}) \\
+mn & 27.16 & 33.33 (\textcolor{red}{+6.17}) & 66.96 & 64.78 (\textcolor{blue}{-2.18}) \\
+ug & 27.13 & 37.65 (\textcolor{red}{+10.52}) & 57.14 & 60.37 (\textcolor{red}{+3.23}) \\
+hy & 50.81 & 56.05 (\textcolor{red}{+5.24}) & 64.49 & 73.88 (\textcolor{red}{+9.39}) \\
+lo & 25.51 & 23.48 (\textcolor{blue}{-2.03}) & 48.54 & 48.95 (\textcolor{red}{+0.41}) \\
+eu & 20.76 & 19.92 (\textcolor{blue}{-0.84}) & 65.62 & 74.55 (\textcolor{red}{+8.93}) \\
+mt & 25.65 & 20.00 (\textcolor{blue}{-5.65}) & 62.11 & 58.59 (\textcolor{blue}{-3.52}) \\
+am & 8.23  & 10.29 (\textcolor{red}{+2.06})  & 39.63 & 32.93 (\textcolor{blue}{-6.70}) \\
+ne & 54.29 & 52.65 (\textcolor{blue}{-1.64}) & 74.58 & 78.81 (\textcolor{red}{+4.23}) \\
+si & 10.16 & 12.20 (\textcolor{red}{+2.04})  & 37.14 & 35.92 (\textcolor{blue}{-1.22}) \\
+ps & 26.46 & 26.91 (\textcolor{red}{+0.45}) & 37.62 & 47.03 (\textcolor{red}{+9.41}) \\
+sd & 20.27 & 22.07 (\textcolor{red}{+1.80}) & 64.81 & 68.52 (\textcolor{red}{+3.71}) \\
+pa & 51.41 & 52.21 (\textcolor{red}{+0.80}) & 55.87 & 52.63 (\textcolor{blue}{-3.24}) \\
+gu & 44.35 & 47.98 (\textcolor{red}{+3.63}) & 59.84 & 60.64 (\textcolor{red}{+0.80}) \\
+mr & 45.34 & 46.96 (\textcolor{red}{+1.62}) & 75.41 & 74.18 (\textcolor{blue}{-1.23}) \\
+or & 44.35 & 43.95 (\textcolor{blue}{-0.40}) & 36.84 & 38.06 (\textcolor{red}{+1.22}) \\
+ta & 47.79 & 49.80 (\textcolor{red}{+2.01}) & 69.48 & 69.08 (\textcolor{blue}{-0.40}) \\
+ml & 42.74 & 46.37 (\textcolor{red}{+3.63}) & 62.25 & 64.66 (\textcolor{red}{+2.41}) \\
+\midrule
+\textbf{AVG.}
+ & 33.99 & 36.37 (\textcolor{red}{+2.38})
+ & 58.06 & 60.08 (\textcolor{red}{+2.02}) \\
+\bottomrule
+\end{tabular}
+}
+\caption{\small Performance comparison on 19 low-resource languages (MGSM) using \textsc{Qwen2.5-7B} with English Skeleton. CoT-$en^{\dagger}$: English-translated queries via Google Translate. Parentheses show $\Delta$ gains.}
+\label{tab:low-resource-mgsm}
+    \vspace{-0.15in}
+\end{table}

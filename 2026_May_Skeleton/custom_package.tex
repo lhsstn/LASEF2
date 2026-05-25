@@ -1,0 +1,84 @@
+%%%%% TEXT
+\usepackage{kotex}   % hangeulwriting
+\usepackage{comment}
+
+
+%%%%% TABLE
+% [Mandatory] caption before the table
+\usepackage{booktabs}
+
+% 박스 스타일 정의
+\usepackage{tcolorbox}
+\tcbuselibrary{breakable}
+\tcbset{
+  mybox/.style={
+    colback=gray!5,
+    colframe=black!60,
+    boxrule=0.5pt,
+    arc=2mm,
+    outer arc=2mm,
+    left=6pt,
+    right=6pt,
+    top=6pt,
+    bottom=6pt,
+    breakable
+  }
+}
+
+
+%%%%% FIGURE
+% [Mandatory] caption after the figure
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+
+\usepackage{enumitem}
+\usepackage[utf8]{inputenc}
+
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+\usepackage{subcaption}
+\captionsetup[subfigure]{labelformat=simple, labelsep=none}
+\renewcommand\thesubfigure{Fig.\thefigure(\alph{subfigure})\ }
+
+\newcommand{\ours}{\textsc{Mentor}}
+
+\usepackage{array}
+\usepackage{makecell}
+\usepackage{geometry}
+\usepackage{amsmath}
+\usepackage{booktabs, tabularx, makecell, threeparttable}
+\usepackage{amsmath}
+
+% preamble
+\usepackage[dvipsnames]{xcolor}  % ForestGreen 사용
+
+
+\usepackage{multirow}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+% This is the main LaTeX file for the ACL template.
+\usepackage[table]{xcolor}
+\usepackage{adjustbox}
+
+\usepackage{booktabs}
+\usepackage[table]{xcolor}
+\usepackage{tabularx}
+\usepackage{ragged2e}
+% pdfLaTeX을 쓴다면:
+\usepackage[table]{xcolor} % 색상 및 테이블 색상 사용
+\usepackage{colortbl}     % \rowcolor, \columncolor 등
+
+
+\tcbuselibrary{listings} % 이 부분을 추가하세요
+
+
+% \usepackage{emoji}
+
+
+% \usepackage[most]{tcolorbox}
+\usepackage{listings}
+

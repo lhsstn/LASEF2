@@ -1,0 +1,35 @@
+\section{Experiments}
+\input{Tables/combined_table}
+본 연구의 실험은 다음 세 가지 연구 질문을 중심으로 설계되었다: (1) 다양한 난이도의 벤치마크와 모델 규모에서, 질문 언어와 출력 언어에 따라 영어 Skeleton은 추론 성능에 어떤 영향을 미치는가? (2) Skeleton 기반 reasoning은 저자원 언어 환경에서 어떠한 영향을 보이는가? (3) 서로 다른 자원 수준(high-, mid-resource) 언어로 생성된 Skeleton은 저자원 언어 추론에 대해 차별적인 효과를 보이는가?
+
+\subsection{Experimental Setup}
+\paragraph{Models.}
+본 연구에서는 제안하는 방법론을 검증하기 위해 최신 오픈소스 모델인 \textbf{Qwen2.5-Instruct}~\citep{qwen2.5} (7B, 14B, 72B)와 \textbf{Llama-3.1-Instruct}~\citep{llama3} (8B, 70B)를 사용한다. 해당 모델들은 우수한 다국어 추론 능력과 학계에서의 광범위한 활용도를 고려하여 선정하였다.
+
+\paragraph{Evaluation.}
+우리는 \textbf{MGSM}~\citep{mgsm}, \textbf{MATH-500}~\citep{math500}, \textbf{PolyMath}~\citep{polymath}의 세 가지 다국어 수학 추론 벤치마크에서 실험을 수행한다.
+Table~\ref{tab:combined-results}에서는 서로 다른 자원 수준을 대표하는 6개 언어(중국어(zh), 스페인어(es), 한국어(ko), 태국어(th), 스와힐리어(sw), 텔루구어(te))에 대한 주요 실험 결과를 제시한다. 나아가, Table~\ref{tab:low-resource-mgsm}에서는 MGSM 벤치마크를 기반으로 보다 넓은 저자원 언어 스펙트럼에 대한 결과를 추가적으로 보고하며, 이 과정에서 Skeleton 언어의 자원 수준(high- and mid-resource)이 저자원 언어 추론 성능에 미치는 영향을 분석한다.
+각 벤치마크와 triggering language에 대한 상세 통계는 Appendix~\ref{sec:appendix-eval-detail}에 기술되어 있다.
+
+\paragraph{Baselines.}
+본 연구에서는 Skeleton을 언어 선택이 추론 성능에 미치는 영향을 분석하기 위한 비교 기준으로 활용한다. 이를 위해 기본적인 Chain-of-Thought (CoT) 프롬프팅~\citep{cot}을 공통 베이스라인으로 설정하고, 입력 질의 언어에 따른 두 가지 변형을 평가한다: (1) 질문을 원본 목표 언어 그대로 입력하는 설정($\ell_q=\text{target}$), (2) 프롬프팅 이전에 Google Translate를 사용하여 질문을 영어로 번역한 뒤 입력하는 설정($\ell_q=\text{EN}$). 이러한 설정은 이후 Skeleton이 제공하는 구조적 가이던스의 효과를, 단순한 입력 언어 변화로부터 분리하여 해석하기 위한 통제 조건으로 사용된다.
+
+\paragraph{Implementation Details.}
+모든 실험에는 greedy decoding을 적용하였다. 정량적 평가는 \texttt{math-verify} 라이브러리~\citep{mathverify}를 활용하여 정답과의 일치 여부(Exact Match, EM)를 측정하였다.
+
+추론 능력에 대한 공정한 비교를 보장하기 위해, 우리는 출력 언어가 일관되게 유지된 샘플에 한정하여 평가를 수행하였다. 구체적으로, 입력 질의가 목표 언어로 주어지는 $\ell_q=\text{target}$ 설정에서는, 기본 CoT와 CoT+Skeleton 두 조건 모두에서 모델이 목표 언어로 CoT를 성공적으로 생성한 경우만을 평가에 포함하였다. 이때 출력 CoT의 언어 판별은 fastText 기반 언어 식별기를 활용하여 자동으로 수행하였다. 이는 Skeleton 기반의 추론 효과를 출력 언어의 혼재나 전환(code-switching)으로 인한 영향으로부터 분리하기 위한 조치이다. 자세한 평가 방식은 Appendix~\ref{}에서 확인할 수 있다.
+
+% 질의 입력과 추론 과정은 사용자 관점에서 서로 다른 역할을 가진다. 사용자는 질의를 직접 작성하기 때문에, 시스템 내부에서 질의가 영어로 번역되어 처리되더라도 의미 이해에 큰 어려움이 없다. 반면 추론 과정은 모델이 새롭게 생성하는 정보이므로, 이 과정이 영어로 제공될 경우 비영어권 사용자에게는 해석과 검증이 어려워질 수 있다.
+
+% 이러한 맥락에서 본 연구는 입력 질의를 영어로 번역하여 추론하는 설정(TransEN)을 합리적인 비교 기준으로 포함하되, 이를 모든 상황에서의 이상적인 해결책으로 가정하지 않는다. 대신 질의 언어를 유지한 채 스켈레톤을 활용하거나, 번역과 스켈레톤을 조합하는 다양한 언어 설정을 고려함으로써, 번역 의존도를 줄이면서도 안정적인 추론을 달성할 수 있는 조건을 체계적으로 분석한다. 이후 절에서는 이러한 언어 조합 설정과 실험 조건을 구체적으로 설명한다.
+
+
+\subsection{Experiment Results}
+\subsubsection{Effect of English Skeleton}
+Table~\ref{tab:combined-results}는 다양한 모델 규모에 대해서 
+\subsubsection{Skeleton in Low-Resource Languages}
+
+\subsubsection{Cross-Lingual Skeleton Transfer}
+
+\input{Tables/mgsm_low_resource}
+\input{Tables/mgsm_variety_low_resource}

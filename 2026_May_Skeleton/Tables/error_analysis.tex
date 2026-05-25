@@ -1,0 +1,50 @@
+\begin{table}[!ht]
+% \small
+\centering
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{l l r r r r r}
+\toprule
+\textbf{Language} & \textbf{Method} 
+& \textbf{Problem} 
+& \textbf{Conceptual} 
+& \textbf{Reasoning} 
+& \textbf{Calculation} 
+& \textbf{Output Gen.} \\
+\midrule
+\multirow{2}{*}{kk}
+& \textsc{CoT-$\ell_t$}   & 100 & 61 & 129 & 33 & 116 \\
+& \textsc{+SKELETON}  &  91 & 54 & 105 & 18 & 135 \\
+\midrule
+\multirow{2}{*}{ug}
+& \textsc{CoT-$\ell_t$}   & 106 & 74 & 156 & 57 &  95 \\
+& \textsc{+SKELETON}  & 100 & 60 & 134 & 33 & 135 \\
+\midrule
+\multirow{2}{*}{mn}
+& \textsc{CoT-$\ell_t$}   & 107 & 78 & 157 & 47 &  88 \\
+& \textsc{+SKELETON}  & 108 & 62 & 142 & 41 & 115 \\
+\midrule
+\multirow{2}{*}{hy}
+& \textsc{CoT-$\ell_t$}   &  80 & 57 & 108 & 31 & 155 \\
+& \textsc{+SKELETON}  &  88 & 50 &  95 & 22 & 154 \\
+\midrule
+\multirow{2}{*}{lo}
+& \textsc{CoT-$\ell_t$}   & 115 & 82 & 159 & 35 & 179 \\
+& \textsc{+SKELETON}  & 133 & 75 & 156 & 27 & 123 \\
+\midrule
+\multirow{2}{*}{eu}
+& \textsc{CoT-$\ell_t$}   & 135 & 88 & 160 & 47 &  76 \\
+& \textsc{+SKELETON}  & 140 & 85 & 155 & 39 &  97 \\
+\midrule
+\multirow{2}{*}{mt}
+& \textsc{CoT-$\ell_t$}   & 112 & 83 & 154 & 47 &  98 \\
+& \textsc{+SKELETON}  & 124 & 66 & 154 & 48 & 119 \\
+\midrule
+\multirow{2}{*}{ne}
+& \textsc{CoT-$\ell_t$}   &  77 & 34 &  93 & 23 & 135 \\
+& \textsc{+SKELETON}  &  72 & 44 &  86 & 26 & 139 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Comparison of \textsc{CoT-$\ell_t$} and \textsc{+SKELETON} Results Across Different Reasoning Stages}
+\label{tab:error_analysis}
+\end{table}
